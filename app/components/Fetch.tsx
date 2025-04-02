@@ -1,16 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { Todo } from "../page"
 //配置前端组件
 
-interface Todo {
-  id: number,
-  name: string,
-  completed: boolean
+interface IProps {
+  todo: Todo[];
+  setTodo: React.Dispatch<React.SetStateAction<Todo[]>>
 }
 
-const Fetch = () => {
-  const [todo, setTodo] = useState<Todo[]>([])
+const Fetch = (props: IProps) => {
+  const { todo, setTodo } = props
   console.log(todo);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Fetch = () => {
         console.log(data);
         setTodo(data)
       })
-  }, [])
+  }, [setTodo])
   return (
     <div>
       {todo.map((todo1) => (

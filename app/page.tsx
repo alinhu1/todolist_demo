@@ -1,12 +1,22 @@
+'use client'
+import React, { useState } from "react";
 import Fetch from "./components/Fetch";
+import Create from "./components/Create";
+
+export interface Todo {
+  id: number,
+  name: string,
+  completed: boolean
+}
 
 export default function Home() {
+  const [todo, setTodo] = useState<Todo[]>([])
   return (
     <div className="content">
       <h1>TODO LIST</h1>
-      <input type="text" placeholder="你想做点什么" className="todo_input"></input>
+      <Create todo={todo} setTodo={setTodo} />
       <ul>
-        <Fetch />
+        <Fetch todo={todo} setTodo={setTodo} />
       </ul>
       <span>还有1个未完成</span>
       <div>
