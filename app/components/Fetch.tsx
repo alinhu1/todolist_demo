@@ -23,6 +23,15 @@ const Fetch = (props: IProps) => {
         setTodo(data)
       })
   }, [setTodo])
+
+  const handleDelete = async (id: number) => {
+    await fetch(`/api/todos/${id}`, {
+      method: 'DELETE'
+    })
+    setTodo(todo.filter(props => props.id !== id))
+  }
+
+
   return (
     <div>
       {todo.map((todo1) => (
@@ -31,7 +40,7 @@ const Fetch = (props: IProps) => {
           <span className="todo_item">
             {todo1.completed ? '√' : ' '}
           </span>
-          <button>删除</button>
+          <button onClick={() => { handleDelete(todo1.id) }}>删除</button>
         </li>
       ))}
     </div>
