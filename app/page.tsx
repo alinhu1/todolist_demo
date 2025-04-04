@@ -18,14 +18,6 @@ export default function Home() {
       <ul>
         <Fetch todo={todo} setTodo={setTodo} />
       </ul>
-      <span>还有1个未完成</span>
-      <div>
-        <span>筛选：</span>
-        <button>全部 </button>
-        <button>未完成 </button>
-        <button>已完成</button>
-      </div>
-
     </div>
   )
 }
