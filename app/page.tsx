@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+
 import Fetch from "./components/Fetch";
 import Create from "./components/Create";
 
@@ -10,13 +10,12 @@ export interface Todo {
 }
 
 export default function Home() {
-  const [todo, setTodo] = useState<Todo[]>([])
   return (
     <div className="content">
       <h1>TODO LIST</h1>
-      <Create todo={todo} setTodo={setTodo} />
+      <Create />
       <ul>
-        <Fetch todo={todo} setTodo={setTodo} />
+        <Fetch />
       </ul>
     </div>
   )

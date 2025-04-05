@@ -1,40 +1,30 @@
-import { useState } from "react";
-import { Todo } from "../page";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 
-
-interface IProps {
-    todo: Todo[];
-    setTodo: React.Dispatch<React.SetStateAction<Todo[]>>
-}
-
-const Create = (props: IProps) => {
-    const { todo, setTodo } = props
-
+const Create = () => {
+    const queryClient = useQueryClient()
     const [inputValue, setInputValue] = useState('')
 
+    const createMutation = useMutation({
+        mutationFn: (newTodo: { name: string }) => fetch('/api/todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...newTodo, completed: false })
+        }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] })
+            setInputValue('')
+        }
+    })
 
-    const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (inputValue === '') {
             return
         }
         if (event.key === 'Enter') {
-            const response = await fetch('/api/todos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: inputValue.trim(),
-                    completed: false
-                })
-            })
-            const newTodos: Todo = await response.json()
-            setTodo([...todo, newTodos])
-            setInputValue('')
-            console.log(`按下回车键的值:${inputValue}`);
-            console.log(newTodos);
+            createMutation.mutate({ name: inputValue.trim() })
         }
     }
-    console.log(todo);
-
 
     return (
         <div>
@@ -43,7 +33,9 @@ const Create = (props: IProps) => {
                 className="todo_input"
                 onChange={(e) => setInputValue(e.target.value)}
                 value={inputValue}
-                onKeyDown={handleKeyDown}></input>
+                onKeyDown={handleKeyDown}
+            >
+            </input>
         </div>
     )
 }
