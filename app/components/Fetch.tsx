@@ -1,36 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Todo } from "../page"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
+import { useDeleteTodos, useFindManyTodos, useUpdateTodos } from "@/generated/hooks"
 
 const Fetch = () => {
   const queryClient = useQueryClient()
+  const { data: todo = [] } = useFindManyTodos()
 
-  const { data: todo } = useQuery<Todo[]>({
-    queryKey: ['todos'],
-    queryFn: () => fetch('/api/todos').then(res => res.json()),
-    initialData: []
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => fetch(`/api/todos/${id}`, {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'DELETE'
-    }),
+  const { mutate: deleteMutation } = useDeleteTodos({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     }
   })
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, completed }: { id: number; completed: boolean }) => fetch(`/api/todos/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        completed
-      })
-    }),
+  const { mutate: updateMutation } = useUpdateTodos({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     }
@@ -55,14 +39,18 @@ const Fetch = () => {
         <li key={todo1.id}>
           {todo1.name}
           <span className={`todo_item ${todo1.completed ? 'todo_item_active' : ''}`}
-            onClick={() => updateMutation.mutate({
-              id: todo1.id,
-              completed: !todo1.completed
+            onClick={() => updateMutation({
+              where: { id: todo1.id },
+              data: { completed: !todo1.completed }
             })
             }>
           </span>
           <button
-            onClick={() => { deleteMutation.mutate(todo1.id) }} >删除</button>
+            onClick={() => {
+              deleteMutation({
+                where: { id: todo1.id }
+              })
+            }} >删除</button>
         </li>
       ))}
 
