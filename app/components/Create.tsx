@@ -1,20 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useCreateTodos } from "@/generated/hooks"
+import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
 const Create = () => {
     const queryClient = useQueryClient()
     const [inputValue, setInputValue] = useState('')
-
-    const createMutation = useMutation({
-        mutationFn: (newTodo: { name: string }) => fetch('/api/todos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...newTodo, completed: false })
-        }),
+    const { mutate: createTodo } = useCreateTodos({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['todos'] })
             setInputValue('')
         }
+
     })
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -22,7 +18,12 @@ const Create = () => {
             return
         }
         if (event.key === 'Enter') {
-            createMutation.mutate({ name: inputValue.trim() })
+            createTodo({
+                data: {
+                    name: inputValue.trim(),
+                    completed: false
+                }
+            })
         }
     }
 

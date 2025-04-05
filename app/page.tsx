@@ -15,7 +15,7 @@ export default function Home() {
       <h1>TODO LIST</h1>
       <Create />
       <ul>
-        <Fetch />
+      <Fetch />
       </ul>
     </div>
   )
