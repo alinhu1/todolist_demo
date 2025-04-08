@@ -4,10 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 plugin openapi {
-    provider = "@zenstackhq/openapi"
-    output = "openapi.yaml"
-    title = "My Todo API"
-    version = "1.0.0"
+  provider = "@zenstackhq/openapi"
+  output = "openapi.yaml"
+  title = "My Todo API"
+  version = "1.0.0"
 }
 plugin hooks {
   provider = '@zenstackhq/tanstack-query'
@@ -16,7 +16,12 @@ plugin hooks {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+generator task {
+  provider = "node --import=tsx ./generator/index.ts"
 }
 
 datasource db {
@@ -24,11 +29,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Todos{
-  id Int @id @default(autoincrement())
-  name String @length(min: 1, max: 100,message:'must be between 1 and 100 characters long') 
-  completed Boolean @default(false)
-  createAt DateTime @default(now())
+model Todos {
+  id        Int      @id @default(autoincrement())
+  name      String   @length(min: 1, max: 100, message: 'must be between 1 and 100 characters long')
+  completed Boolean  @default(false)
+  createAt  DateTime @default(now())
   
   //everyone can create,read,update,delete a todos
   @@allow('create,read,update,delete',true)
