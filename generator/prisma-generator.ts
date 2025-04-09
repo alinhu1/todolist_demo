@@ -1,28 +1,34 @@
 import { EnvValue, GeneratorOptions } from "@prisma/generator-helper";
 import { parseEnvValue } from "@prisma/internals";
-import { renderFile } from "ejs";
 import path from "path";
 import { writeFileSafely } from "./writeFileSafely";
+import { formatFile } from "./formatFile";
 
 export async function generate(options: GeneratorOptions) {
     // 获取所有模型名称
-    const modelNames = options.dmmf.datamodel.models.map((model) => model.name);
+    const modelInfo = options.dmmf.datamodel.models.map((model) => ({
+        name: model.name,
+    fields: model.fields.map(field => ({
+        name: field.name,
+        type:field.type,
+        isId: field.isId
+    }))
+}));
+const typeDefinitions = `
+export type ModelInfo = {
+  name: string;
+  fields: Array<{
+    name: string;
+    type: string;
+    isId: boolean;
+  }>;
+};
 
-    // 生成 buildTask.ts
-    const buildTaskContent = await renderFile(
-        path.join(__dirname, "buildTask.ejs"),
-        {
-            models: modelNames,
-            actions: [
-                "create",
-                "update",
-                "delete",],
-            capitalize: (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-        }
-    );
-
+export const models: ModelInfo[] = ${JSON.stringify(modelInfo, null, 2)};
+`;
+const formatted = await formatFile(typeDefinitions);
     await writeFileSafely(
-        path.join(parseEnvValue(options.generator.output as EnvValue), "buildTask.ts"),
-        buildTaskContent
+        path.join(parseEnvValue(options.generator.output as EnvValue), "task.ts"),
+        formatted
     );
 }

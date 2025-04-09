@@ -6,7 +6,7 @@ import { generate } from "./prisma-generator";
 generatorHandler({
   onManifest: () => ({
     defaultOutput: "../generated/task",
-    prettyName: "Whiteboard Task Generator",
+    prettyName: "Todo Task Generator",
     requiresGenerators: ["prisma-client-js"],
   }),
   onGenerate: generate,
