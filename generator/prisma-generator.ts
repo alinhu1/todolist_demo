@@ -16,10 +16,7 @@ export async function generate(options: GeneratorOptions) {
             actions: [
                 "create",
                 "update",
-                "delete",
-                "createMany",
-                "updateMany",
-                "deleteMany",],
+                "delete",],
             capitalize: (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
         }
     );
@@ -27,29 +24,5 @@ export async function generate(options: GeneratorOptions) {
     await writeFileSafely(
         path.join(parseEnvValue(options.generator.output as EnvValue), "buildTask.ts"),
         buildTaskContent
-    );
-
-    const runTaskContent = await renderFile(
-        path.join(__dirname, "./runTask.ejs"),
-        {
-            models: modelNames,
-            actions: [
-                "create",
-                "update",
-                "delete",
-                "createMany",
-                "updateMany",
-                "deleteMany",
-            ],
-            capitalize: (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-        },
-    );
-
-    await writeFileSafely(
-        path.join(
-            parseEnvValue(options.generator.output as EnvValue),
-            "./runTask.ts",
-        ),
-        runTaskContent,
     );
 }

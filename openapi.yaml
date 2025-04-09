@@ -1,0 +1,1810 @@
+openapi: 3.1.0
+info:
+  title: My Todo API
+  version: 1.0.0
+tags:
+  - name: todos
+    description: Todos operations
+components:
+  schemas:
+    TodosScalarFieldEnum:
+      type: string
+      enum:
+        - id
+        - name
+        - completed
+        - createAt
+    SortOrder:
+      type: string
+      enum:
+        - asc
+        - desc
+    QueryMode:
+      type: string
+      enum:
+        - default
+        - insensitive
+    Todos:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - completed
+        - createAt
+    TodosWhereInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/TodosWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/IntFilter"
+            - type: integer
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        completed:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
+        createAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+    TodosOrderByWithRelationInput:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/SortOrder"
+        name:
+          $ref: "#/components/schemas/SortOrder"
+        completed:
+          $ref: "#/components/schemas/SortOrder"
+        createAt:
+          $ref: "#/components/schemas/SortOrder"
+    TodosWhereUniqueInput:
+      type: object
+      properties:
+        id:
+          type: integer
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/TodosWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereInput"
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        completed:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
+        createAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+    TodosScalarWhereWithAggregatesInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/IntWithAggregatesFilter"
+            - type: integer
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        completed:
+          oneOf:
+            - $ref: "#/components/schemas/BoolWithAggregatesFilter"
+            - type: boolean
+        createAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeWithAggregatesFilter"
+            - type: string
+              format: date-time
+    TodosCreateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - name
+    TodosUpdateInput:
+      type: object
+      properties:
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        completed:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
+        createAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    TodosCreateManyInput:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - name
+    TodosUpdateManyMutationInput:
+      type: object
+      properties:
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        completed:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
+        createAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    IntFilter:
+      type: object
+      properties:
+        equals:
+          type: integer
+        in:
+          type: array
+          items:
+            type: integer
+        notIn:
+          type: array
+          items:
+            type: integer
+        lt:
+          type: integer
+        lte:
+          type: integer
+        gt:
+          type: integer
+        gte:
+          type: integer
+        not:
+          oneOf:
+            - type: integer
+            - $ref: "#/components/schemas/NestedIntFilter"
+    StringFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        mode:
+          $ref: "#/components/schemas/QueryMode"
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringFilter"
+    BoolFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolFilter"
+    DateTimeFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+          format: date-time
+        in:
+          type: array
+          items:
+            type: string
+            format: date-time
+        notIn:
+          type: array
+          items:
+            type: string
+            format: date-time
+        lt:
+          type: string
+          format: date-time
+        lte:
+          type: string
+          format: date-time
+        gt:
+          type: string
+          format: date-time
+        gte:
+          type: string
+          format: date-time
+        not:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/NestedDateTimeFilter"
+    IntWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: integer
+        in:
+          type: array
+          items:
+            type: integer
+        notIn:
+          type: array
+          items:
+            type: integer
+        lt:
+          type: integer
+        lte:
+          type: integer
+        gt:
+          type: integer
+        gte:
+          type: integer
+        not:
+          oneOf:
+            - type: integer
+            - $ref: "#/components/schemas/NestedIntWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _avg:
+          $ref: "#/components/schemas/NestedFloatFilter"
+        _sum:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _max:
+          $ref: "#/components/schemas/NestedIntFilter"
+    StringWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        mode:
+          $ref: "#/components/schemas/QueryMode"
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedStringFilter"
+        _max:
+          $ref: "#/components/schemas/NestedStringFilter"
+    BoolWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedBoolFilter"
+        _max:
+          $ref: "#/components/schemas/NestedBoolFilter"
+    DateTimeWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+          format: date-time
+        in:
+          type: array
+          items:
+            type: string
+            format: date-time
+        notIn:
+          type: array
+          items:
+            type: string
+            format: date-time
+        lt:
+          type: string
+          format: date-time
+        lte:
+          type: string
+          format: date-time
+        gt:
+          type: string
+          format: date-time
+        gte:
+          type: string
+          format: date-time
+        not:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/NestedDateTimeWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedDateTimeFilter"
+        _max:
+          $ref: "#/components/schemas/NestedDateTimeFilter"
+    StringFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          type: string
+    BoolFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          type: boolean
+    DateTimeFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          type: string
+          format: date-time
+    NestedIntFilter:
+      type: object
+      properties:
+        equals:
+          type: integer
+        in:
+          type: array
+          items:
+            type: integer
+        notIn:
+          type: array
+          items:
+            type: integer
+        lt:
+          type: integer
+        lte:
+          type: integer
+        gt:
+          type: integer
+        gte:
+          type: integer
+        not:
+          oneOf:
+            - type: integer
+            - $ref: "#/components/schemas/NestedIntFilter"
+    NestedStringFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringFilter"
+    NestedBoolFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolFilter"
+    NestedDateTimeFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+          format: date-time
+        in:
+          type: array
+          items:
+            type: string
+            format: date-time
+        notIn:
+          type: array
+          items:
+            type: string
+            format: date-time
+        lt:
+          type: string
+          format: date-time
+        lte:
+          type: string
+          format: date-time
+        gt:
+          type: string
+          format: date-time
+        gte:
+          type: string
+          format: date-time
+        not:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/NestedDateTimeFilter"
+    NestedIntWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: integer
+        in:
+          type: array
+          items:
+            type: integer
+        notIn:
+          type: array
+          items:
+            type: integer
+        lt:
+          type: integer
+        lte:
+          type: integer
+        gt:
+          type: integer
+        gte:
+          type: integer
+        not:
+          oneOf:
+            - type: integer
+            - $ref: "#/components/schemas/NestedIntWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _avg:
+          $ref: "#/components/schemas/NestedFloatFilter"
+        _sum:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _max:
+          $ref: "#/components/schemas/NestedIntFilter"
+    NestedFloatFilter:
+      type: object
+      properties:
+        equals:
+          type: number
+        in:
+          type: array
+          items:
+            type: number
+        notIn:
+          type: array
+          items:
+            type: number
+        lt:
+          type: number
+        lte:
+          type: number
+        gt:
+          type: number
+        gte:
+          type: number
+        not:
+          oneOf:
+            - type: number
+            - $ref: "#/components/schemas/NestedFloatFilter"
+    NestedStringWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedStringFilter"
+        _max:
+          $ref: "#/components/schemas/NestedStringFilter"
+    NestedBoolWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: boolean
+        not:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/NestedBoolWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedBoolFilter"
+        _max:
+          $ref: "#/components/schemas/NestedBoolFilter"
+    NestedDateTimeWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+          format: date-time
+        in:
+          type: array
+          items:
+            type: string
+            format: date-time
+        notIn:
+          type: array
+          items:
+            type: string
+            format: date-time
+        lt:
+          type: string
+          format: date-time
+        lte:
+          type: string
+          format: date-time
+        gt:
+          type: string
+          format: date-time
+        gte:
+          type: string
+          format: date-time
+        not:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/NestedDateTimeWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedDateTimeFilter"
+        _max:
+          $ref: "#/components/schemas/NestedDateTimeFilter"
+    TodosSelect:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        completed:
+          type: boolean
+        createAt:
+          type: boolean
+    TodosCountAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        completed:
+          type: boolean
+        createAt:
+          type: boolean
+        _all:
+          type: boolean
+    TodosAvgAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+    TodosSumAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+    TodosMinAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        completed:
+          type: boolean
+        createAt:
+          type: boolean
+    TodosMaxAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        completed:
+          type: boolean
+        createAt:
+          type: boolean
+    AggregateTodos:
+      type: object
+      properties:
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosCountAggregateOutputType"
+        _avg:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosAvgAggregateOutputType"
+        _sum:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosSumAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosMaxAggregateOutputType"
+    TodosGroupByOutputType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosCountAggregateOutputType"
+        _avg:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosAvgAggregateOutputType"
+        _sum:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosSumAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/TodosMaxAggregateOutputType"
+      required:
+        - id
+        - name
+        - completed
+        - createAt
+    TodosCountAggregateOutputType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: integer
+        completed:
+          type: integer
+        createAt:
+          type: integer
+        _all:
+          type: integer
+      required:
+        - id
+        - name
+        - completed
+        - createAt
+        - _all
+    TodosAvgAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: number
+    TodosSumAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: integer
+    TodosMinAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: integer
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        completed:
+          oneOf:
+            - type: "null"
+            - type: boolean
+        createAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
+    TodosMaxAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: integer
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        completed:
+          oneOf:
+            - type: "null"
+            - type: boolean
+        createAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
+    _Meta:
+      type: object
+      description: Meta information about the request or response
+      properties:
+        serialization:
+          description: Serialization metadata
+      additionalProperties: true
+    _Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+          properties:
+            prisma:
+              type: boolean
+              description: Indicates if the error occurred during a Prisma call
+            rejectedByPolicy:
+              type: boolean
+              description: Indicates if the error was due to rejection by a policy
+            code:
+              type: string
+              description: Prisma error code. Only available when "prisma" field is true.
+            message:
+              type: string
+              description: Error message
+            reason:
+              type: string
+              description: Detailed error reason
+            zodErrors:
+              type: object
+              additionalProperties: true
+              description: Zod validation errors if the error is due to data validation
+                failure
+          additionalProperties: true
+    BatchPayload:
+      type: object
+      properties:
+        count:
+          type: integer
+    TodosCreateArgs:
+      type: object
+      required:
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        data:
+          $ref: "#/components/schemas/TodosCreateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosCreateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateManyInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateManyInput"
+        skipDuplicates:
+          type: boolean
+          description: Do not insert records with unique fields or ID fields that already
+            exist.
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosFindUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosFindFirstArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosFindManyArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosUpdateArgs:
+      type: object
+      required:
+        - where
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        data:
+          $ref: "#/components/schemas/TodosUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosUpdateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        data:
+          $ref: "#/components/schemas/TodosUpdateManyMutationInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosUpsertArgs:
+      type: object
+      required:
+        - create
+        - update
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        create:
+          $ref: "#/components/schemas/TodosCreateInput"
+        update:
+          $ref: "#/components/schemas/TodosUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosDeleteUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosDeleteManyArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosCountArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/TodosSelect"
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosAggregateArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/TodosOrderByWithRelationInput"
+        cursor:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/TodosCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/TodosMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/TodosMaxAggregateInput"
+        _sum:
+          $ref: "#/components/schemas/TodosSumAggregateInput"
+        _avg:
+          $ref: "#/components/schemas/TodosAvgAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    TodosGroupByArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/TodosOrderByWithRelationInput"
+        by:
+          $ref: "#/components/schemas/TodosScalarFieldEnum"
+        having:
+          $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/TodosCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/TodosMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/TodosMaxAggregateInput"
+        _sum:
+          $ref: "#/components/schemas/TodosSumAggregateInput"
+        _avg:
+          $ref: "#/components/schemas/TodosAvgAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+paths:
+  /todos/create:
+    post:
+      operationId: createTodos
+      description: Create a new Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodosCreateArgs"
+  /todos/createMany:
+    post:
+      operationId: createManyTodos
+      description: Create several Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodosCreateManyArgs"
+  /todos/findUnique:
+    get:
+      operationId: findUniqueTodos
+      description: Find one unique Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosFindUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/findFirst:
+    get:
+      operationId: findFirstTodos
+      description: Find the first Todos matching the given condition
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosFindFirstArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/findMany:
+    get:
+      operationId: findManyTodos
+      description: Find a list of Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosFindManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/update:
+    patch:
+      operationId: updateTodos
+      description: Update a Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodosUpdateArgs"
+  /todos/updateMany:
+    patch:
+      operationId: updateManyTodos
+      description: Update Todoss matching the given condition
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodosUpdateManyArgs"
+  /todos/upsert:
+    post:
+      operationId: upsertTodos
+      description: Upsert a Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodosUpsertArgs"
+  /todos/delete:
+    delete:
+      operationId: deleteTodos
+      description: Delete one unique Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Todos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosDeleteUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/deleteMany:
+    delete:
+      operationId: deleteManyTodos
+      description: Delete Todoss matching the given condition
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosDeleteManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/count:
+    get:
+      operationId: countTodos
+      description: Find a list of Todos
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    oneOf:
+                      - type: integer
+                      - $ref: "#/components/schemas/TodosCountAggregateOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosCountArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/aggregate:
+    get:
+      operationId: aggregateTodos
+      description: Aggregate Todoss
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AggregateTodos"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosAggregateArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /todos/groupBy:
+    get:
+      operationId: groupByTodos
+      description: Group Todoss by fields
+      tags:
+        - todos
+      security: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TodosGroupByOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodosGroupByArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
