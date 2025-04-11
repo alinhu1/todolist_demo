@@ -7,7 +7,8 @@ env:
 on:
   push:
     branches:
-      - main  
+      - main
+      - feat/vercel_deploy  
 
 jobs:
   Deploy-Preview:
