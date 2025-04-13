@@ -54,7 +54,7 @@ jobs:
 
           DEPLOY_URL=$(grep -o 'https://[^ ]*\.vercel\.app' deploy.log | head -n1)
           
-          yarn vercel alias set $DEPLOY_URL alinhu1-todolist.vercel.app \
+          yarn vercel alias set $DEPLOY_URL alinhu-todolist.vercel.app \
             --scope $VERCEL_ORG_ID \
             --token=${{ secrets.VERCEL_TOKEN }}
             
