@@ -57,3 +57,4 @@ jobs:
           yarn vercel alias set $DEPLOY_URL alinhu1-todolist.vercel.app \
             --scope $VERCEL_ORG_ID \
             --token=${{ secrets.VERCEL_TOKEN }}
+            
