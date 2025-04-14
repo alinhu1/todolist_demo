@@ -7,7 +7,8 @@ env:
 on:
   push:
     branches:
-      - main  
+      - main
+      - feat/vercel_deploy  
 
 jobs:
   Deploy-Preview:
@@ -42,7 +43,8 @@ jobs:
 
 
       - name: Build Project
-        run: yarn vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          yarn vercel build --token=${{ secrets.VERCEL_TOKEN }}
 
     
       - name: Deploy to Vercel
@@ -52,7 +54,7 @@ jobs:
 
           DEPLOY_URL=$(grep -o 'https://[^ ]*\.vercel\.app' deploy.log | head -n1)
           
-
-          yarn vercel alias set $DEPLOY_URL idealjs-whiteboard.vercel.app \
+          yarn vercel alias set $DEPLOY_URL alinhu-todolist.vercel.app \
             --scope $VERCEL_ORG_ID \
             --token=${{ secrets.VERCEL_TOKEN }}
+            
