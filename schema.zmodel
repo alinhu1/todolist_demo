@@ -29,12 +29,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  name String @unique
+  password String
+  todo Todos[]
+
+  @@deny('all',auth()==null)
+  @@deny('create',true)
+  @@allow('read',true)
+  @@allow('update,delete',auth()==this)
+}
+
+
 model Todos {
   id        Int      @id @default(autoincrement())
   name      String   @length(min: 1, max: 100, message: 'must be between 1 and 100 characters long')
   completed Boolean  @default(false)
   createAt  DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
   
-  //everyone can create,read,update,delete a todos
-  @@allow('create,read,update,delete',true)
+  @@deny('all',auth()==null)
+  @@allow('all',auth().id==userId)
 }
