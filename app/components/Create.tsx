@@ -1,3 +1,5 @@
+'use client'
+
 import { useCreateTodos } from "@/generated/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
