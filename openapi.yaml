@@ -3,10 +3,18 @@ info:
   title: My Todo API
   version: 1.0.0
 tags:
+  - name: user
+    description: User operations
   - name: todos
     description: Todos operations
 components:
   schemas:
+    UserScalarFieldEnum:
+      type: string
+      enum:
+        - id
+        - name
+        - password
     TodosScalarFieldEnum:
       type: string
       enum:
@@ -14,6 +22,7 @@ components:
         - name
         - completed
         - createAt
+        - userId
     SortOrder:
       type: string
       enum:
@@ -24,11 +33,28 @@ components:
       enum:
         - default
         - insensitive
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        todo:
+          type: array
+          items:
+            $ref: "#/components/schemas/Todos"
+      required:
+        - id
+        - name
+        - password
     Todos:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
         completed:
@@ -36,11 +62,123 @@ components:
         createAt:
           type: string
           format: date-time
+        user:
+          $ref: "#/components/schemas/User"
+        userId:
+          type: string
       required:
         - id
         - name
         - completed
         - createAt
+        - user
+        - userId
+    UserWhereInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/UserWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/UserWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserWhereInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        password:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        todo:
+          $ref: "#/components/schemas/TodosListRelationFilter"
+    UserOrderByWithRelationInput:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/SortOrder"
+        name:
+          $ref: "#/components/schemas/SortOrder"
+        password:
+          $ref: "#/components/schemas/SortOrder"
+        todo:
+          $ref: "#/components/schemas/TodosOrderByRelationAggregateInput"
+    UserWhereUniqueInput:
+      type: object
+      properties:
+        id:
+          type: string
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/UserWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/UserWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserWhereInput"
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        password:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        todo:
+          $ref: "#/components/schemas/TodosListRelationFilter"
+    UserScalarWhereWithAggregatesInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        password:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
     TodosWhereInput:
       type: object
       properties:
@@ -62,8 +200,8 @@ components:
                 $ref: "#/components/schemas/TodosWhereInput"
         id:
           oneOf:
-            - $ref: "#/components/schemas/IntFilter"
-            - type: integer
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
         name:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
@@ -77,6 +215,14 @@ components:
             - $ref: "#/components/schemas/DateTimeFilter"
             - type: string
               format: date-time
+        userId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        user:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
     TodosOrderByWithRelationInput:
       type: object
       properties:
@@ -88,11 +234,15 @@ components:
           $ref: "#/components/schemas/SortOrder"
         createAt:
           $ref: "#/components/schemas/SortOrder"
+        userId:
+          $ref: "#/components/schemas/SortOrder"
+        user:
+          $ref: "#/components/schemas/UserOrderByWithRelationInput"
     TodosWhereUniqueInput:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         AND:
           oneOf:
             - $ref: "#/components/schemas/TodosWhereInput"
@@ -122,6 +272,14 @@ components:
             - $ref: "#/components/schemas/DateTimeFilter"
             - type: string
               format: date-time
+        userId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        user:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
     TodosScalarWhereWithAggregatesInput:
       type: object
       properties:
@@ -143,8 +301,8 @@ components:
                 $ref: "#/components/schemas/TodosScalarWhereWithAggregatesInput"
         id:
           oneOf:
-            - $ref: "#/components/schemas/IntWithAggregatesFilter"
-            - type: integer
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
         name:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
@@ -158,9 +316,75 @@ components:
             - $ref: "#/components/schemas/DateTimeWithAggregatesFilter"
             - type: string
               format: date-time
+        userId:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+    UserCreateInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        todo:
+          $ref: "#/components/schemas/TodosCreateNestedManyWithoutUserInput"
+      required:
+        - id
+        - name
+        - password
+    UserUpdateInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        password:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        todo:
+          $ref: "#/components/schemas/TodosUpdateManyWithoutUserNestedInput"
+    UserCreateManyInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - id
+        - name
+        - password
+    UserUpdateManyMutationInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        password:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
     TodosCreateInput:
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
         completed:
@@ -168,11 +392,17 @@ components:
         createAt:
           type: string
           format: date-time
+        user:
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutTodoInput"
       required:
         - name
     TodosUpdateInput:
       type: object
       properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
         name:
           oneOf:
             - type: string
@@ -186,11 +416,13 @@ components:
             - type: string
               format: date-time
             - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        user:
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutTodoNestedInput"
     TodosCreateManyInput:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
         completed:
@@ -198,11 +430,17 @@ components:
         createAt:
           type: string
           format: date-time
+        userId:
+          type: string
       required:
         - name
     TodosUpdateManyMutationInput:
       type: object
       properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
         name:
           oneOf:
             - type: string
@@ -216,31 +454,6 @@ components:
             - type: string
               format: date-time
             - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
-    IntFilter:
-      type: object
-      properties:
-        equals:
-          type: integer
-        in:
-          type: array
-          items:
-            type: integer
-        notIn:
-          type: array
-          items:
-            type: integer
-        lt:
-          type: integer
-        lte:
-          type: integer
-        gt:
-          type: integer
-        gte:
-          type: integer
-        not:
-          oneOf:
-            - type: integer
-            - $ref: "#/components/schemas/NestedIntFilter"
     StringFilter:
       type: object
       properties:
@@ -274,6 +487,59 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/NestedStringFilter"
+    TodosListRelationFilter:
+      type: object
+      properties:
+        every:
+          $ref: "#/components/schemas/TodosWhereInput"
+        some:
+          $ref: "#/components/schemas/TodosWhereInput"
+        none:
+          $ref: "#/components/schemas/TodosWhereInput"
+    TodosOrderByRelationAggregateInput:
+      type: object
+      properties:
+        _count:
+          $ref: "#/components/schemas/SortOrder"
+    StringWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        mode:
+          $ref: "#/components/schemas/QueryMode"
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedStringFilter"
+        _max:
+          $ref: "#/components/schemas/NestedStringFilter"
     BoolFilter:
       type: object
       properties:
@@ -316,80 +582,13 @@ components:
             - type: string
               format: date-time
             - $ref: "#/components/schemas/NestedDateTimeFilter"
-    IntWithAggregatesFilter:
+    UserScalarRelationFilter:
       type: object
       properties:
-        equals:
-          type: integer
-        in:
-          type: array
-          items:
-            type: integer
-        notIn:
-          type: array
-          items:
-            type: integer
-        lt:
-          type: integer
-        lte:
-          type: integer
-        gt:
-          type: integer
-        gte:
-          type: integer
-        not:
-          oneOf:
-            - type: integer
-            - $ref: "#/components/schemas/NestedIntWithAggregatesFilter"
-        _count:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _avg:
-          $ref: "#/components/schemas/NestedFloatFilter"
-        _sum:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _min:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _max:
-          $ref: "#/components/schemas/NestedIntFilter"
-    StringWithAggregatesFilter:
-      type: object
-      properties:
-        equals:
-          type: string
-        in:
-          type: array
-          items:
-            type: string
-        notIn:
-          type: array
-          items:
-            type: string
-        lt:
-          type: string
-        lte:
-          type: string
-        gt:
-          type: string
-        gte:
-          type: string
-        contains:
-          type: string
-        startsWith:
-          type: string
-        endsWith:
-          type: string
-        mode:
-          $ref: "#/components/schemas/QueryMode"
-        not:
-          oneOf:
-            - type: string
-            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
-        _count:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _min:
-          $ref: "#/components/schemas/NestedStringFilter"
-        _max:
-          $ref: "#/components/schemas/NestedStringFilter"
+        is:
+          $ref: "#/components/schemas/UserWhereInput"
+        isNot:
+          $ref: "#/components/schemas/UserWhereInput"
     BoolWithAggregatesFilter:
       type: object
       properties:
@@ -444,11 +643,118 @@ components:
           $ref: "#/components/schemas/NestedDateTimeFilter"
         _max:
           $ref: "#/components/schemas/NestedDateTimeFilter"
+    TodosCreateNestedManyWithoutUserInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+        createMany:
+          $ref: "#/components/schemas/TodosCreateManyUserInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
     StringFieldUpdateOperationsInput:
       type: object
       properties:
         set:
           type: string
+    TodosUpdateManyWithoutUserNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpsertWithWhereUniqueWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpsertWithWhereUniqueWithoutUserInput"
+        createMany:
+          $ref: "#/components/schemas/TodosCreateManyUserInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateWithWhereUniqueWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpdateWithWhereUniqueWithoutUserInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateManyWithWhereWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpdateManyWithWhereWithoutUserInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereInput"
+    UserCreateNestedOneWithoutTodoInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodoInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
     BoolFieldUpdateOperationsInput:
       type: object
       properties:
@@ -460,31 +766,24 @@ components:
         set:
           type: string
           format: date-time
-    NestedIntFilter:
+    UserUpdateOneRequiredWithoutTodoNestedInput:
       type: object
       properties:
-        equals:
-          type: integer
-        in:
-          type: array
-          items:
-            type: integer
-        notIn:
-          type: array
-          items:
-            type: integer
-        lt:
-          type: integer
-        lte:
-          type: integer
-        gt:
-          type: integer
-        gte:
-          type: integer
-        not:
+        create:
           oneOf:
-            - type: integer
-            - $ref: "#/components/schemas/NestedIntFilter"
+            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodoInput"
+        upsert:
+          $ref: "#/components/schemas/UserUpsertWithoutTodoInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateToOneWithWhereWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
     NestedStringFilter:
       type: object
       properties:
@@ -516,6 +815,68 @@ components:
           oneOf:
             - type: string
             - $ref: "#/components/schemas/NestedStringFilter"
+    NestedStringWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        lt:
+          type: string
+        lte:
+          type: string
+        gt:
+          type: string
+        gte:
+          type: string
+        contains:
+          type: string
+        startsWith:
+          type: string
+        endsWith:
+          type: string
+        not:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedStringFilter"
+        _max:
+          $ref: "#/components/schemas/NestedStringFilter"
+    NestedIntFilter:
+      type: object
+      properties:
+        equals:
+          type: integer
+        in:
+          type: array
+          items:
+            type: integer
+        notIn:
+          type: array
+          items:
+            type: integer
+        lt:
+          type: integer
+        lte:
+          type: integer
+        gt:
+          type: integer
+        gte:
+          type: integer
+        not:
+          oneOf:
+            - type: integer
+            - $ref: "#/components/schemas/NestedIntFilter"
     NestedBoolFilter:
       type: object
       properties:
@@ -558,103 +919,6 @@ components:
             - type: string
               format: date-time
             - $ref: "#/components/schemas/NestedDateTimeFilter"
-    NestedIntWithAggregatesFilter:
-      type: object
-      properties:
-        equals:
-          type: integer
-        in:
-          type: array
-          items:
-            type: integer
-        notIn:
-          type: array
-          items:
-            type: integer
-        lt:
-          type: integer
-        lte:
-          type: integer
-        gt:
-          type: integer
-        gte:
-          type: integer
-        not:
-          oneOf:
-            - type: integer
-            - $ref: "#/components/schemas/NestedIntWithAggregatesFilter"
-        _count:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _avg:
-          $ref: "#/components/schemas/NestedFloatFilter"
-        _sum:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _min:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _max:
-          $ref: "#/components/schemas/NestedIntFilter"
-    NestedFloatFilter:
-      type: object
-      properties:
-        equals:
-          type: number
-        in:
-          type: array
-          items:
-            type: number
-        notIn:
-          type: array
-          items:
-            type: number
-        lt:
-          type: number
-        lte:
-          type: number
-        gt:
-          type: number
-        gte:
-          type: number
-        not:
-          oneOf:
-            - type: number
-            - $ref: "#/components/schemas/NestedFloatFilter"
-    NestedStringWithAggregatesFilter:
-      type: object
-      properties:
-        equals:
-          type: string
-        in:
-          type: array
-          items:
-            type: string
-        notIn:
-          type: array
-          items:
-            type: string
-        lt:
-          type: string
-        lte:
-          type: string
-        gt:
-          type: string
-        gte:
-          type: string
-        contains:
-          type: string
-        startsWith:
-          type: string
-        endsWith:
-          type: string
-        not:
-          oneOf:
-            - type: string
-            - $ref: "#/components/schemas/NestedStringWithAggregatesFilter"
-        _count:
-          $ref: "#/components/schemas/NestedIntFilter"
-        _min:
-          $ref: "#/components/schemas/NestedStringFilter"
-        _max:
-          $ref: "#/components/schemas/NestedStringFilter"
     NestedBoolWithAggregatesFilter:
       type: object
       properties:
@@ -709,6 +973,361 @@ components:
           $ref: "#/components/schemas/NestedDateTimeFilter"
         _max:
           $ref: "#/components/schemas/NestedDateTimeFilter"
+    TodosCreateWithoutUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - name
+    TodosUncheckedCreateWithoutUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - name
+    TodosCreateOrConnectWithoutUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+      required:
+        - where
+        - create
+    TodosCreateManyUserInputEnvelope:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateManyUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateManyUserInput"
+        skipDuplicates:
+          type: boolean
+      required:
+        - data
+    TodosUpsertWithWhereUniqueWithoutUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedUpdateWithoutUserInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+      required:
+        - where
+        - update
+        - create
+    TodosUpdateWithWhereUniqueWithoutUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosWhereUniqueInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedUpdateWithoutUserInput"
+      required:
+        - where
+        - data
+    TodosUpdateManyWithWhereWithoutUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/TodosScalarWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateManyMutationInput"
+            - $ref: "#/components/schemas/TodosUncheckedUpdateManyWithoutUserInput"
+      required:
+        - where
+        - data
+    TodosScalarWhereInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/TodosScalarWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        name:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        completed:
+          oneOf:
+            - $ref: "#/components/schemas/BoolFilter"
+            - type: boolean
+        createAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        userId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+    UserCreateWithoutTodoInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - id
+        - name
+        - password
+    UserUncheckedCreateWithoutTodoInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - id
+        - name
+        - password
+    UserCreateOrConnectWithoutTodoInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+      required:
+        - where
+        - create
+    UserUpsertWithoutTodoInput:
+      type: object
+      properties:
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+      required:
+        - update
+        - create
+    UserUpdateToOneWithWhereWithoutTodoInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
+      required:
+        - data
+    UserUpdateWithoutTodoInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        password:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+    UserUncheckedUpdateWithoutTodoInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        password:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+    TodosCreateManyUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        completed:
+          type: boolean
+        createAt:
+          type: string
+          format: date-time
+      required:
+        - name
+    TodosUpdateWithoutUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        completed:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
+        createAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    TodosUncheckedUpdateWithoutUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        completed:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
+        createAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    TodosUncheckedUpdateManyWithoutUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        completed:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
+        createAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    UserDefaultArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+    UserInclude:
+      type: object
+      properties:
+        todo:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/TodosFindManyArgs"
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserCountOutputTypeDefaultArgs"
+    TodosInclude:
+      type: object
+      properties:
+        user:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
+    UserCountOutputTypeSelect:
+      type: object
+      properties:
+        todo:
+          type: boolean
+    UserCountOutputTypeDefaultArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/UserCountOutputTypeSelect"
+    UserSelect:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        password:
+          type: boolean
+        todo:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/TodosFindManyArgs"
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserCountOutputTypeDefaultArgs"
     TodosSelect:
       type: object
       properties:
@@ -719,6 +1338,41 @@ components:
         completed:
           type: boolean
         createAt:
+          type: boolean
+        user:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
+        userId:
+          type: boolean
+    UserCountAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        password:
+          type: boolean
+        _all:
+          type: boolean
+    UserMinAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        password:
+          type: boolean
+    UserMaxAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        name:
+          type: boolean
+        password:
           type: boolean
     TodosCountAggregateInput:
       type: object
@@ -731,17 +1385,9 @@ components:
           type: boolean
         createAt:
           type: boolean
+        userId:
+          type: boolean
         _all:
-          type: boolean
-    TodosAvgAggregateInput:
-      type: object
-      properties:
-        id:
-          type: boolean
-    TodosSumAggregateInput:
-      type: object
-      properties:
-        id:
           type: boolean
     TodosMinAggregateInput:
       type: object
@@ -754,6 +1400,8 @@ components:
           type: boolean
         createAt:
           type: boolean
+        userId:
+          type: boolean
     TodosMaxAggregateInput:
       type: object
       properties:
@@ -765,6 +1413,48 @@ components:
           type: boolean
         createAt:
           type: boolean
+        userId:
+          type: boolean
+    AggregateUser:
+      type: object
+      properties:
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserCountAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserMaxAggregateOutputType"
+    UserGroupByOutputType:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserCountAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/UserMaxAggregateOutputType"
+      required:
+        - id
+        - name
+        - password
     AggregateTodos:
       type: object
       properties:
@@ -772,14 +1462,6 @@ components:
           oneOf:
             - type: "null"
             - $ref: "#/components/schemas/TodosCountAggregateOutputType"
-        _avg:
-          oneOf:
-            - type: "null"
-            - $ref: "#/components/schemas/TodosAvgAggregateOutputType"
-        _sum:
-          oneOf:
-            - type: "null"
-            - $ref: "#/components/schemas/TodosSumAggregateOutputType"
         _min:
           oneOf:
             - type: "null"
@@ -792,7 +1474,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
         name:
           type: string
         completed:
@@ -800,18 +1482,12 @@ components:
         createAt:
           type: string
           format: date-time
+        userId:
+          type: string
         _count:
           oneOf:
             - type: "null"
             - $ref: "#/components/schemas/TodosCountAggregateOutputType"
-        _avg:
-          oneOf:
-            - type: "null"
-            - $ref: "#/components/schemas/TodosAvgAggregateOutputType"
-        _sum:
-          oneOf:
-            - type: "null"
-            - $ref: "#/components/schemas/TodosSumAggregateOutputType"
         _min:
           oneOf:
             - type: "null"
@@ -825,6 +1501,53 @@ components:
         - name
         - completed
         - createAt
+        - userId
+    UserCountAggregateOutputType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: integer
+        password:
+          type: integer
+        _all:
+          type: integer
+      required:
+        - id
+        - name
+        - password
+        - _all
+    UserMinAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        password:
+          oneOf:
+            - type: "null"
+            - type: string
+    UserMaxAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        password:
+          oneOf:
+            - type: "null"
+            - type: string
     TodosCountAggregateOutputType:
       type: object
       properties:
@@ -836,6 +1559,8 @@ components:
           type: integer
         createAt:
           type: integer
+        userId:
+          type: integer
         _all:
           type: integer
       required:
@@ -843,28 +1568,15 @@ components:
         - name
         - completed
         - createAt
+        - userId
         - _all
-    TodosAvgAggregateOutputType:
-      type: object
-      properties:
-        id:
-          oneOf:
-            - type: "null"
-            - type: number
-    TodosSumAggregateOutputType:
-      type: object
-      properties:
-        id:
-          oneOf:
-            - type: "null"
-            - type: integer
     TodosMinAggregateOutputType:
       type: object
       properties:
         id:
           oneOf:
             - type: "null"
-            - type: integer
+            - type: string
         name:
           oneOf:
             - type: "null"
@@ -878,13 +1590,17 @@ components:
             - type: "null"
             - type: string
               format: date-time
+        userId:
+          oneOf:
+            - type: "null"
+            - type: string
     TodosMaxAggregateOutputType:
       type: object
       properties:
         id:
           oneOf:
             - type: "null"
-            - type: integer
+            - type: string
         name:
           oneOf:
             - type: "null"
@@ -898,6 +1614,10 @@ components:
             - type: "null"
             - type: string
               format: date-time
+        userId:
+          oneOf:
+            - type: "null"
+            - type: string
     _Meta:
       type: object
       description: Meta information about the request or response
@@ -941,6 +1661,194 @@ components:
       properties:
         count:
           type: integer
+    UserCreateArgs:
+      type: object
+      required:
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        data:
+          $ref: "#/components/schemas/UserCreateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserCreateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateManyInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/UserCreateManyInput"
+        skipDuplicates:
+          type: boolean
+          description: Do not insert records with unique fields or ID fields that already
+            exist.
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserFindUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserFindFirstArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserFindManyArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserUpdateArgs:
+      type: object
+      required:
+        - where
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        data:
+          $ref: "#/components/schemas/UserUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserUpdateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        data:
+          $ref: "#/components/schemas/UserUpdateManyMutationInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserUpsertArgs:
+      type: object
+      required:
+        - create
+        - update
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        create:
+          $ref: "#/components/schemas/UserCreateInput"
+        update:
+          $ref: "#/components/schemas/UserUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserDeleteUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        include:
+          $ref: "#/components/schemas/UserInclude"
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserDeleteManyArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserCountArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/UserSelect"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserAggregateArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/UserOrderByWithRelationInput"
+        cursor:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/UserMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/UserMaxAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    UserGroupByArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/UserOrderByWithRelationInput"
+        by:
+          $ref: "#/components/schemas/UserScalarFieldEnum"
+        having:
+          $ref: "#/components/schemas/UserScalarWhereWithAggregatesInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/UserMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/UserMaxAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
     TodosCreateArgs:
       type: object
       required:
@@ -948,6 +1856,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         data:
           $ref: "#/components/schemas/TodosCreateInput"
         meta:
@@ -976,6 +1886,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereUniqueInput"
         meta:
@@ -985,6 +1897,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereInput"
         meta:
@@ -994,6 +1908,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereInput"
         meta:
@@ -1006,6 +1922,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereUniqueInput"
         data:
@@ -1032,6 +1950,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereUniqueInput"
         create:
@@ -1047,6 +1967,8 @@ components:
       properties:
         select:
           $ref: "#/components/schemas/TodosSelect"
+        include:
+          $ref: "#/components/schemas/TodosInclude"
         where:
           $ref: "#/components/schemas/TodosWhereUniqueInput"
         meta:
@@ -1088,10 +2010,6 @@ components:
           $ref: "#/components/schemas/TodosMinAggregateInput"
         _max:
           $ref: "#/components/schemas/TodosMaxAggregateInput"
-        _sum:
-          $ref: "#/components/schemas/TodosSumAggregateInput"
-        _avg:
-          $ref: "#/components/schemas/TodosAvgAggregateInput"
         meta:
           $ref: "#/components/schemas/_Meta"
     TodosGroupByArgs:
@@ -1117,20 +2035,686 @@ components:
           $ref: "#/components/schemas/TodosMinAggregateInput"
         _max:
           $ref: "#/components/schemas/TodosMaxAggregateInput"
-        _sum:
-          $ref: "#/components/schemas/TodosSumAggregateInput"
-        _avg:
-          $ref: "#/components/schemas/TodosAvgAggregateInput"
         meta:
           $ref: "#/components/schemas/_Meta"
 paths:
+  /user/create:
+    post:
+      operationId: createUser
+      description: Create a new User
+      tags:
+        - user
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateArgs"
+  /user/createMany:
+    post:
+      operationId: createManyUser
+      description: Create several User
+      tags:
+        - user
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateManyArgs"
+  /user/findUnique:
+    get:
+      operationId: findUniqueUser
+      description: Find one unique User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserFindUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/findFirst:
+    get:
+      operationId: findFirstUser
+      description: Find the first User matching the given condition
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserFindFirstArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/findMany:
+    get:
+      operationId: findManyUser
+      description: Find a list of User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserFindManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/update:
+    patch:
+      operationId: updateUser
+      description: Update a User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateArgs"
+  /user/updateMany:
+    patch:
+      operationId: updateManyUser
+      description: Update Users matching the given condition
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateManyArgs"
+  /user/upsert:
+    post:
+      operationId: upsertUser
+      description: Upsert a User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpsertArgs"
+  /user/delete:
+    delete:
+      operationId: deleteUser
+      description: Delete one unique User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDeleteUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/deleteMany:
+    delete:
+      operationId: deleteManyUser
+      description: Delete Users matching the given condition
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDeleteManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/count:
+    get:
+      operationId: countUser
+      description: Find a list of User
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    oneOf:
+                      - type: integer
+                      - $ref: "#/components/schemas/UserCountAggregateOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCountArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/aggregate:
+    get:
+      operationId: aggregateUser
+      description: Aggregate Users
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AggregateUser"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAggregateArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /user/groupBy:
+    get:
+      operationId: groupByUser
+      description: Group Users by fields
+      tags:
+        - user
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserGroupByOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGroupByArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
   /todos/create:
     post:
       operationId: createTodos
       description: Create a new Todos
       tags:
         - todos
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -1176,7 +2760,6 @@ paths:
       description: Create several Todos
       tags:
         - todos
-      security: []
       responses:
         "201":
           description: Successful operation
@@ -1222,7 +2805,6 @@ paths:
       description: Find one unique Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1278,7 +2860,6 @@ paths:
       description: Find the first Todos matching the given condition
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1334,7 +2915,6 @@ paths:
       description: Find a list of Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1392,7 +2972,6 @@ paths:
       description: Update a Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1438,7 +3017,6 @@ paths:
       description: Update Todoss matching the given condition
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1484,7 +3062,6 @@ paths:
       description: Upsert a Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1530,7 +3107,6 @@ paths:
       description: Delete one unique Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1586,7 +3162,6 @@ paths:
       description: Delete Todoss matching the given condition
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1642,7 +3217,6 @@ paths:
       description: Find a list of Todos
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1700,7 +3274,6 @@ paths:
       description: Aggregate Todoss
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation
@@ -1756,7 +3329,6 @@ paths:
       description: Group Todoss by fields
       tags:
         - todos
-      security: []
       responses:
         "200":
           description: Successful operation

@@ -4,7 +4,12 @@ import { useCreateTodos } from "@/generated/hooks"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
-const Create = () => {
+interface IProps {
+    userId: string
+}
+
+const Create = (props: IProps) => {
+    const { userId } = props
     const queryClient = useQueryClient()
     const [inputValue, setInputValue] = useState('')
     const { mutate: createTodo } = useCreateTodos({
@@ -23,7 +28,8 @@ const Create = () => {
             createTodo({
                 data: {
                     name: inputValue.trim(),
-                    completed: false
+                    completed: false,
+                    userId: userId
                 }
             })
         }
