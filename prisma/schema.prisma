@@ -18,10 +18,9 @@ generator task {
 }
 
 model User {
-  id       String  @id()
-  name     String
-  password String
-  todo     Todos[]
+  id   String  @id()
+  name String?
+  todo Todos[]
 }
 
 model Todos {
