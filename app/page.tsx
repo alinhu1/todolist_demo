@@ -1,5 +1,3 @@
-
-
 import Fetch from "./components/Fetch";
 import Create from "./components/Create";
 import { getLogtoContext, signIn, signOut } from "@logto/next/server-actions";
@@ -7,15 +5,13 @@ import { logtoConfig } from "./logto";
 import SignOut from "./sign-out";
 import SignIn from "./sign-in";
 
-
-
 export interface Todo {
-  id: number,
-  name: string,
-  completed: boolean
+  id: number;
+  name: string;
+  completed: boolean;
 }
 
-export default async function Home(){
+export default async function Home() {
   const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
   return (
     <div className="content">
@@ -25,7 +21,7 @@ export default async function Home(){
           Hello, {claims?.sub},
           <SignOut
             onSignOut={async () => {
-              'use server';
+              "use server";
 
               await signOut(logtoConfig);
             }}
@@ -35,18 +31,17 @@ export default async function Home(){
         <p>
           <SignIn
             onSignIn={async () => {
-              'use server';
+              "use server";
 
               await signIn(logtoConfig);
             }}
           />
         </p>
       )}
-      <Create />
+      {claims?.sub == null ? null : <Create userId={claims?.sub} />}
       <ul>
-      <Fetch />
+        <Fetch />
       </ul>
-      
     </div>
-  )
+  );
 }

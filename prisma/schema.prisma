@@ -17,9 +17,17 @@ generator task {
   provider = "node --import=tsx ./generator/index.ts"
 }
 
+model User {
+  id   String  @id()
+  name String?
+  todo Todos[]
+}
+
 model Todos {
-  id        Int      @id() @default(autoincrement())
+  id        String   @id() @default(cuid())
   name      String
   completed Boolean  @default(false)
   createAt  DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
 }
