@@ -4,7 +4,8 @@ import { getLogtoContext, signIn, signOut } from "@logto/next/server-actions";
 import { logtoConfig } from "./logto";
 import SignOut from "./sign-out";
 import SignIn from "./sign-in";
-
+import SearchUser from "./components/SearchUser";
+import Request from "./components/Request";
 export interface Todo {
   id: number;
   name: string;
@@ -40,8 +41,10 @@ export default async function Home() {
       )}
       {claims?.sub == null ? null : <Create userId={claims?.sub} />}
       <ul>
-        <Fetch />
+        <Fetch currentUserId={claims?.sub || ""} />
       </ul>
+      <SearchUser currentUserId={claims?.sub || ""} />
+      <Request currentUserId={claims?.sub || ""} />
     </div>
   );
 }
