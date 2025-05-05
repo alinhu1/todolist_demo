@@ -4,6 +4,10 @@ import { getLogtoContext, signIn, signOut } from "@logto/next/server-actions";
 import { logtoConfig } from "./logto";
 import SignOut from "./sign-out";
 import SignIn from "./sign-in";
+
+import SearchUser from "./components/SearchUser";
+import Request from "./components/Request";
+
 import Image from "next/image";
 
 export interface Todo {
@@ -41,13 +45,13 @@ export default async function Home() {
             <SignIn
               onSignIn={async () => {
                 "use server";
-
                 await signIn(logtoConfig);
               }}
             />
           </p>
         )}
       </div>
+
       <div className="content">
         <Image
           src="/images/path.png"
@@ -58,10 +62,13 @@ export default async function Home() {
           className="path"
         />
         <h1>TODO LIST</h1>
+
         {claims?.sub == null ? null : <Create userId={claims?.sub} />}
         <ul>
-          <Fetch />
+          <Fetch currentUserId={claims?.sub || ""} />
         </ul>
+        <SearchUser currentUserId={claims?.sub || ""} />
+        <Request currentUserId={claims?.sub || ""} />
       </div>
     </div>
   );

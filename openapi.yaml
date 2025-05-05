@@ -7,8 +7,16 @@ tags:
     description: User operations
   - name: todos
     description: Todos operations
+  - name: request
+    description: Request operations
 components:
   schemas:
+    RequestStatus:
+      type: string
+      enum:
+        - pending
+        - approved
+        - rejected
     UserScalarFieldEnum:
       type: string
       enum:
@@ -20,8 +28,18 @@ components:
         - id
         - name
         - completed
-        - createAt
+        - createdAt
         - userId
+    RequestScalarFieldEnum:
+      type: string
+      enum:
+        - id
+        - requesterId
+        - targetUserId
+        - status
+        - message
+        - createdAt
+        - updatedAt
     SortOrder:
       type: string
       enum:
@@ -46,10 +64,18 @@ components:
           oneOf:
             - type: "null"
             - type: string
-        todo:
+        todos:
           type: array
           items:
             $ref: "#/components/schemas/Todos"
+        sentRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request"
+        receivedRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request"
       required:
         - id
     Todos:
@@ -61,7 +87,7 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
         user:
@@ -72,9 +98,43 @@ components:
         - id
         - name
         - completed
-        - createAt
+        - createdAt
         - user
         - userId
+    Request:
+      type: object
+      properties:
+        id:
+          type: string
+        requester:
+          $ref: "#/components/schemas/User"
+        requesterId:
+          type: string
+        targetUser:
+          $ref: "#/components/schemas/User"
+        targetUserId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - requester
+        - requesterId
+        - targetUser
+        - targetUserId
+        - status
+        - createdAt
+        - updatedAt
     UserWhereInput:
       type: object
       properties:
@@ -103,8 +163,12 @@ components:
             - $ref: "#/components/schemas/StringNullableFilter"
             - type: string
             - type: "null"
-        todo:
+        todos:
           $ref: "#/components/schemas/TodosListRelationFilter"
+        sentRequests:
+          $ref: "#/components/schemas/RequestListRelationFilter"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestListRelationFilter"
     UserOrderByWithRelationInput:
       type: object
       properties:
@@ -114,8 +178,12 @@ components:
           oneOf:
             - $ref: "#/components/schemas/SortOrder"
             - $ref: "#/components/schemas/SortOrderInput"
-        todo:
+        todos:
           $ref: "#/components/schemas/TodosOrderByRelationAggregateInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestOrderByRelationAggregateInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestOrderByRelationAggregateInput"
     UserWhereUniqueInput:
       type: object
       properties:
@@ -142,8 +210,12 @@ components:
             - $ref: "#/components/schemas/StringNullableFilter"
             - type: string
             - type: "null"
-        todo:
+        todos:
           $ref: "#/components/schemas/TodosListRelationFilter"
+        sentRequests:
+          $ref: "#/components/schemas/RequestListRelationFilter"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestListRelationFilter"
     UserScalarWhereWithAggregatesInput:
       type: object
       properties:
@@ -203,7 +275,7 @@ components:
           oneOf:
             - $ref: "#/components/schemas/BoolFilter"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - $ref: "#/components/schemas/DateTimeFilter"
             - type: string
@@ -225,7 +297,7 @@ components:
           $ref: "#/components/schemas/SortOrder"
         completed:
           $ref: "#/components/schemas/SortOrder"
-        createAt:
+        createdAt:
           $ref: "#/components/schemas/SortOrder"
         userId:
           $ref: "#/components/schemas/SortOrder"
@@ -260,7 +332,7 @@ components:
           oneOf:
             - $ref: "#/components/schemas/BoolFilter"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - $ref: "#/components/schemas/DateTimeFilter"
             - type: string
@@ -304,7 +376,7 @@ components:
           oneOf:
             - $ref: "#/components/schemas/BoolWithAggregatesFilter"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - $ref: "#/components/schemas/DateTimeWithAggregatesFilter"
             - type: string
@@ -313,6 +385,193 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringWithAggregatesFilter"
             - type: string
+    RequestWhereInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        requesterId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        targetUserId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/EnumRequestStatusFilter"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - $ref: "#/components/schemas/StringNullableFilter"
+            - type: string
+            - type: "null"
+        createdAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        requester:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
+        targetUser:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
+    RequestOrderByWithRelationInput:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/SortOrder"
+        requesterId:
+          $ref: "#/components/schemas/SortOrder"
+        targetUserId:
+          $ref: "#/components/schemas/SortOrder"
+        status:
+          $ref: "#/components/schemas/SortOrder"
+        message:
+          oneOf:
+            - $ref: "#/components/schemas/SortOrder"
+            - $ref: "#/components/schemas/SortOrderInput"
+        createdAt:
+          $ref: "#/components/schemas/SortOrder"
+        updatedAt:
+          $ref: "#/components/schemas/SortOrder"
+        requester:
+          $ref: "#/components/schemas/UserOrderByWithRelationInput"
+        targetUser:
+          $ref: "#/components/schemas/UserOrderByWithRelationInput"
+    RequestWhereUniqueInput:
+      type: object
+      properties:
+        id:
+          type: string
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereInput"
+        requesterId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        targetUserId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/EnumRequestStatusFilter"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - $ref: "#/components/schemas/StringNullableFilter"
+            - type: string
+            - type: "null"
+        createdAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        requester:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
+        targetUser:
+          oneOf:
+            - $ref: "#/components/schemas/UserScalarRelationFilter"
+            - $ref: "#/components/schemas/UserWhereInput"
+    RequestScalarWhereWithAggregatesInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        requesterId:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        targetUserId:
+          oneOf:
+            - $ref: "#/components/schemas/StringWithAggregatesFilter"
+            - type: string
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/EnumRequestStatusWithAggregatesFilter"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - $ref: "#/components/schemas/StringNullableWithAggregatesFilter"
+            - type: string
+            - type: "null"
+        createdAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeWithAggregatesFilter"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeWithAggregatesFilter"
+            - type: string
+              format: date-time
     UserCreateInput:
       type: object
       properties:
@@ -322,8 +581,12 @@ components:
           oneOf:
             - type: "null"
             - type: string
-        todo:
+        todos:
           $ref: "#/components/schemas/TodosCreateNestedManyWithoutUserInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutRequesterInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutTargetUserInput"
       required:
         - id
     UserUpdateInput:
@@ -338,8 +601,12 @@ components:
             - type: string
             - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
             - type: "null"
-        todo:
+        todos:
           $ref: "#/components/schemas/TodosUpdateManyWithoutUserNestedInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutRequesterNestedInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutTargetUserNestedInput"
     UserCreateManyInput:
       type: object
       properties:
@@ -372,11 +639,11 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
         user:
-          $ref: "#/components/schemas/UserCreateNestedOneWithoutTodoInput"
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutTodosInput"
       required:
         - name
         - user
@@ -395,13 +662,13 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
-        createAt:
+        createdAt:
           oneOf:
             - type: string
               format: date-time
             - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
         user:
-          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutTodoNestedInput"
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutTodosNestedInput"
     TodosCreateManyInput:
       type: object
       properties:
@@ -411,7 +678,7 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
         userId:
@@ -434,7 +701,114 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
-        createAt:
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    RequestCreateInput:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        requester:
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutSentRequestsInput"
+        targetUser:
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutReceivedRequestsInput"
+      required:
+        - status
+        - requester
+        - targetUser
+    RequestUpdateInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        requester:
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutSentRequestsNestedInput"
+        targetUser:
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutReceivedRequestsNestedI\
+            nput"
+    RequestCreateManyInput:
+      type: object
+      properties:
+        id:
+          type: string
+        requesterId:
+          type: string
+        targetUserId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - requesterId
+        - targetUserId
+        - status
+    RequestUpdateManyMutationInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
           oneOf:
             - type: string
               format: date-time
@@ -521,6 +895,15 @@ components:
           $ref: "#/components/schemas/TodosWhereInput"
         none:
           $ref: "#/components/schemas/TodosWhereInput"
+    RequestListRelationFilter:
+      type: object
+      properties:
+        every:
+          $ref: "#/components/schemas/RequestWhereInput"
+        some:
+          $ref: "#/components/schemas/RequestWhereInput"
+        none:
+          $ref: "#/components/schemas/RequestWhereInput"
     SortOrderInput:
       type: object
       properties:
@@ -531,6 +914,11 @@ components:
       required:
         - sort
     TodosOrderByRelationAggregateInput:
+      type: object
+      properties:
+        _count:
+          $ref: "#/components/schemas/SortOrder"
+    RequestOrderByRelationAggregateInput:
       type: object
       properties:
         _count:
@@ -723,6 +1111,46 @@ components:
           $ref: "#/components/schemas/NestedDateTimeFilter"
         _max:
           $ref: "#/components/schemas/NestedDateTimeFilter"
+    EnumRequestStatusFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/RequestStatus"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
+    EnumRequestStatusWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/RequestStatus"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/NestedEnumRequestStatusWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
+        _max:
+          $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
     TodosCreateNestedManyWithoutUserInput:
       type: object
       properties:
@@ -750,6 +1178,141 @@ components:
             - type: array
               items:
                 $ref: "#/components/schemas/TodosWhereUniqueInput"
+    RequestCreateNestedManyWithoutRequesterInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyRequesterInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+    RequestCreateNestedManyWithoutTargetUserInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyTargetUserInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+    TodosUncheckedCreateNestedManyWithoutUserInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+        createMany:
+          $ref: "#/components/schemas/TodosCreateManyUserInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+    RequestUncheckedCreateNestedManyWithoutRequesterInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyRequesterInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+    RequestUncheckedCreateNestedManyWithoutTargetUserInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyTargetUserInputEnvelope"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
     StringFieldUpdateOperationsInput:
       type: object
       properties:
@@ -831,15 +1394,360 @@ components:
             - type: array
               items:
                 $ref: "#/components/schemas/TodosScalarWhereInput"
-    UserCreateNestedOneWithoutTodoInput:
+    RequestUpdateManyWithoutRequesterNestedInput:
       type: object
       properties:
         create:
           oneOf:
-            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
         connectOrCreate:
-          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodoInput"
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutRequesterInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyRequesterInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutRequesterInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutRequesterInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+    RequestUpdateManyWithoutTargetUserNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutTargetUserInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyTargetUserInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutTargetUserInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutTargetUserInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+    TodosUncheckedUpdateManyWithoutUserNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateWithoutUserInput"
+            - $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUncheckedCreateWithoutUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosCreateOrConnectWithoutUserInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpsertWithWhereUniqueWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpsertWithWhereUniqueWithoutUserInput"
+        createMany:
+          $ref: "#/components/schemas/TodosCreateManyUserInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/TodosWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateWithWhereUniqueWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpdateWithWhereUniqueWithoutUserInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/TodosUpdateManyWithWhereWithoutUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosUpdateManyWithWhereWithoutUserInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/TodosScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/TodosScalarWhereInput"
+    RequestUncheckedUpdateManyWithoutRequesterNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutRequesterInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutRequesterInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyRequesterInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutRequesterInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutRequesterInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+    RequestUncheckedUpdateManyWithoutTargetUserNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+        connectOrCreate:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateOrConnectWithoutTargetUserInput"
+        upsert:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpsertWithWhereUniqueWithoutTargetUserInput"
+        createMany:
+          $ref: "#/components/schemas/RequestCreateManyTargetUserInputEnvelope"
+        set:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        disconnect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        delete:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        connect:
+          oneOf:
+            - $ref: "#/components/schemas/RequestWhereUniqueInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateWithWhereUniqueWithoutTargetUserInput"
+        updateMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestUpdateManyWithWhereWithoutTargetUserInput"
+        deleteMany:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+    UserCreateNestedOneWithoutTodosInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodosInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodosInput"
         connect:
           $ref: "#/components/schemas/UserWhereUniqueInput"
     BoolFieldUpdateOperationsInput:
@@ -853,24 +1761,88 @@ components:
         set:
           type: string
           format: date-time
-    UserUpdateOneRequiredWithoutTodoNestedInput:
+    UserUpdateOneRequiredWithoutTodosNestedInput:
       type: object
       properties:
         create:
           oneOf:
-            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserCreateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodosInput"
         connectOrCreate:
-          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodoInput"
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutTodosInput"
         upsert:
-          $ref: "#/components/schemas/UserUpsertWithoutTodoInput"
+          $ref: "#/components/schemas/UserUpsertWithoutTodosInput"
         connect:
           $ref: "#/components/schemas/UserWhereUniqueInput"
         update:
           oneOf:
-            - $ref: "#/components/schemas/UserUpdateToOneWithWhereWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUpdateToOneWithWhereWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUpdateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodosInput"
+    UserCreateNestedOneWithoutSentRequestsInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutSentRequestsInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutSentRequestsInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+    UserCreateNestedOneWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutReceivedRequestsInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutReceivedRequestsInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+    EnumRequestStatusFieldUpdateOperationsInput:
+      type: object
+      properties:
+        set:
+          $ref: "#/components/schemas/RequestStatus"
+    UserUpdateOneRequiredWithoutSentRequestsNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutSentRequestsInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutSentRequestsInput"
+        upsert:
+          $ref: "#/components/schemas/UserUpsertWithoutSentRequestsInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateToOneWithWhereWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUpdateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutSentRequestsInput"
+    UserUpdateOneRequiredWithoutReceivedRequestsNestedInput:
+      type: object
+      properties:
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutReceivedRequestsInput"
+        connectOrCreate:
+          $ref: "#/components/schemas/UserCreateOrConnectWithoutReceivedRequestsInput"
+        upsert:
+          $ref: "#/components/schemas/UserUpsertWithoutReceivedRequestsInput"
+        connect:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateToOneWithWhereWithoutReceivedRequestsInpu\
+                t"
+            - $ref: "#/components/schemas/UserUpdateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutReceivedRequestsInput"
     NestedStringFilter:
       type: object
       properties:
@@ -1174,6 +2146,46 @@ components:
           $ref: "#/components/schemas/NestedDateTimeFilter"
         _max:
           $ref: "#/components/schemas/NestedDateTimeFilter"
+    NestedEnumRequestStatusFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/RequestStatus"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
+    NestedEnumRequestStatusWithAggregatesFilter:
+      type: object
+      properties:
+        equals:
+          $ref: "#/components/schemas/RequestStatus"
+        in:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        notIn:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStatus"
+        not:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/NestedEnumRequestStatusWithAggregatesFilter"
+        _count:
+          $ref: "#/components/schemas/NestedIntFilter"
+        _min:
+          $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
+        _max:
+          $ref: "#/components/schemas/NestedEnumRequestStatusFilter"
     TodosCreateWithoutUserInput:
       type: object
       properties:
@@ -1183,7 +2195,7 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
       required:
@@ -1197,7 +2209,7 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
       required:
@@ -1223,6 +2235,144 @@ components:
             - type: array
               items:
                 $ref: "#/components/schemas/TodosCreateManyUserInput"
+        skipDuplicates:
+          type: boolean
+      required:
+        - data
+    RequestCreateWithoutRequesterInput:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        targetUser:
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutReceivedRequestsInput"
+      required:
+        - status
+        - targetUser
+    RequestUncheckedCreateWithoutRequesterInput:
+      type: object
+      properties:
+        id:
+          type: string
+        targetUserId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - targetUserId
+        - status
+    RequestCreateOrConnectWithoutRequesterInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+      required:
+        - where
+        - create
+    RequestCreateManyRequesterInputEnvelope:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateManyRequesterInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateManyRequesterInput"
+        skipDuplicates:
+          type: boolean
+      required:
+        - data
+    RequestCreateWithoutTargetUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        requester:
+          $ref: "#/components/schemas/UserCreateNestedOneWithoutSentRequestsInput"
+      required:
+        - status
+        - requester
+    RequestUncheckedCreateWithoutTargetUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        requesterId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - requesterId
+        - status
+    RequestCreateOrConnectWithoutTargetUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+      required:
+        - where
+        - create
+    RequestCreateManyTargetUserInputEnvelope:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateManyTargetUserInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateManyTargetUserInput"
         skipDuplicates:
           type: boolean
       required:
@@ -1299,7 +2449,7 @@ components:
           oneOf:
             - $ref: "#/components/schemas/BoolFilter"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - $ref: "#/components/schemas/DateTimeFilter"
             - type: string
@@ -1308,7 +2458,139 @@ components:
           oneOf:
             - $ref: "#/components/schemas/StringFilter"
             - type: string
-    UserCreateWithoutTodoInput:
+    RequestUpsertWithWhereUniqueWithoutRequesterInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateWithoutRequesterInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutRequesterInput"
+      required:
+        - where
+        - update
+        - create
+    RequestUpdateWithWhereUniqueWithoutRequesterInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithoutRequesterInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateWithoutRequesterInput"
+      required:
+        - where
+        - data
+    RequestUpdateManyWithWhereWithoutRequesterInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestScalarWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyMutationInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutRequesterInput"
+      required:
+        - where
+        - data
+    RequestScalarWhereInput:
+      type: object
+      properties:
+        AND:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+        OR:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestScalarWhereInput"
+        NOT:
+          oneOf:
+            - $ref: "#/components/schemas/RequestScalarWhereInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestScalarWhereInput"
+        id:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        requesterId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        targetUserId:
+          oneOf:
+            - $ref: "#/components/schemas/StringFilter"
+            - type: string
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/EnumRequestStatusFilter"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - $ref: "#/components/schemas/StringNullableFilter"
+            - type: string
+            - type: "null"
+        createdAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - $ref: "#/components/schemas/DateTimeFilter"
+            - type: string
+              format: date-time
+    RequestUpsertWithWhereUniqueWithoutTargetUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateWithoutTargetUserInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedCreateWithoutTargetUserInput"
+      required:
+        - where
+        - update
+        - create
+    RequestUpdateWithWhereUniqueWithoutTargetUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateWithoutTargetUserInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateWithoutTargetUserInput"
+      required:
+        - where
+        - data
+    RequestUpdateManyWithWhereWithoutTargetUserInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestScalarWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestUpdateManyMutationInput"
+            - $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutTargetUserInput"
+      required:
+        - where
+        - data
+    UserCreateWithoutTodosInput:
       type: object
       properties:
         id:
@@ -1317,9 +2599,13 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        sentRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutRequesterInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutTargetUserInput"
       required:
         - id
-    UserUncheckedCreateWithoutTodoInput:
+    UserUncheckedCreateWithoutTodosInput:
       type: object
       properties:
         id:
@@ -1328,48 +2614,54 @@ components:
           oneOf:
             - type: "null"
             - type: string
+        sentRequests:
+          $ref: "#/components/schemas/RequestUncheckedCreateNestedManyWithoutRequesterInp\
+            ut"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUncheckedCreateNestedManyWithoutTargetUserIn\
+            put"
       required:
         - id
-    UserCreateOrConnectWithoutTodoInput:
+    UserCreateOrConnectWithoutTodosInput:
       type: object
       properties:
         where:
           $ref: "#/components/schemas/UserWhereUniqueInput"
         create:
           oneOf:
-            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserCreateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodosInput"
       required:
         - where
         - create
-    UserUpsertWithoutTodoInput:
+    UserUpsertWithoutTodosInput:
       type: object
       properties:
         update:
           oneOf:
-            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUpdateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodosInput"
         create:
           oneOf:
-            - $ref: "#/components/schemas/UserCreateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserCreateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutTodosInput"
         where:
           $ref: "#/components/schemas/UserWhereInput"
       required:
         - update
         - create
-    UserUpdateToOneWithWhereWithoutTodoInput:
+    UserUpdateToOneWithWhereWithoutTodosInput:
       type: object
       properties:
         where:
           $ref: "#/components/schemas/UserWhereInput"
         data:
           oneOf:
-            - $ref: "#/components/schemas/UserUpdateWithoutTodoInput"
-            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodoInput"
+            - $ref: "#/components/schemas/UserUpdateWithoutTodosInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutTodosInput"
       required:
         - data
-    UserUpdateWithoutTodoInput:
+    UserUpdateWithoutTodosInput:
       type: object
       properties:
         id:
@@ -1381,7 +2673,11 @@ components:
             - type: string
             - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
             - type: "null"
-    UserUncheckedUpdateWithoutTodoInput:
+        sentRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutRequesterNestedInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutTargetUserNestedInput"
+    UserUncheckedUpdateWithoutTodosInput:
       type: object
       properties:
         id:
@@ -1393,6 +2689,218 @@ components:
             - type: string
             - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
             - type: "null"
+        sentRequests:
+          $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutRequesterNestedInp\
+            ut"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutTargetUserNestedIn\
+            put"
+    UserCreateWithoutSentRequestsInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        todos:
+          $ref: "#/components/schemas/TodosCreateNestedManyWithoutUserInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutTargetUserInput"
+      required:
+        - id
+    UserUncheckedCreateWithoutSentRequestsInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        todos:
+          $ref: "#/components/schemas/TodosUncheckedCreateNestedManyWithoutUserInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUncheckedCreateNestedManyWithoutTargetUserIn\
+            put"
+      required:
+        - id
+    UserCreateOrConnectWithoutSentRequestsInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutSentRequestsInput"
+      required:
+        - where
+        - create
+    UserCreateWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        todos:
+          $ref: "#/components/schemas/TodosCreateNestedManyWithoutUserInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestCreateNestedManyWithoutRequesterInput"
+      required:
+        - id
+    UserUncheckedCreateWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          oneOf:
+            - type: "null"
+            - type: string
+        todos:
+          $ref: "#/components/schemas/TodosUncheckedCreateNestedManyWithoutUserInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestUncheckedCreateNestedManyWithoutRequesterInp\
+            ut"
+      required:
+        - id
+    UserCreateOrConnectWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereUniqueInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutReceivedRequestsInput"
+      required:
+        - where
+        - create
+    UserUpsertWithoutSentRequestsInput:
+      type: object
+      properties:
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutSentRequestsInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutSentRequestsInput"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+      required:
+        - update
+        - create
+    UserUpdateToOneWithWhereWithoutSentRequestsInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutSentRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutSentRequestsInput"
+      required:
+        - data
+    UserUpdateWithoutSentRequestsInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        todos:
+          $ref: "#/components/schemas/TodosUpdateManyWithoutUserNestedInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutTargetUserNestedInput"
+    UserUncheckedUpdateWithoutSentRequestsInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        todos:
+          $ref: "#/components/schemas/TodosUncheckedUpdateManyWithoutUserNestedInput"
+        receivedRequests:
+          $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutTargetUserNestedIn\
+            put"
+    UserUpsertWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        update:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutReceivedRequestsInput"
+        create:
+          oneOf:
+            - $ref: "#/components/schemas/UserCreateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedCreateWithoutReceivedRequestsInput"
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+      required:
+        - update
+        - create
+    UserUpdateToOneWithWhereWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/UserWhereInput"
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/UserUpdateWithoutReceivedRequestsInput"
+            - $ref: "#/components/schemas/UserUncheckedUpdateWithoutReceivedRequestsInput"
+      required:
+        - data
+    UserUpdateWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        todos:
+          $ref: "#/components/schemas/TodosUpdateManyWithoutUserNestedInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestUpdateManyWithoutRequesterNestedInput"
+    UserUncheckedUpdateWithoutReceivedRequestsInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        name:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        todos:
+          $ref: "#/components/schemas/TodosUncheckedUpdateManyWithoutUserNestedInput"
+        sentRequests:
+          $ref: "#/components/schemas/RequestUncheckedUpdateManyWithoutRequesterNestedInp\
+            ut"
     TodosCreateManyUserInput:
       type: object
       properties:
@@ -1402,11 +2910,55 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
       required:
         - name
+    RequestCreateManyRequesterInput:
+      type: object
+      properties:
+        id:
+          type: string
+        targetUserId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - targetUserId
+        - status
+    RequestCreateManyTargetUserInput:
+      type: object
+      properties:
+        id:
+          type: string
+        requesterId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - requesterId
+        - status
     TodosUpdateWithoutUserInput:
       type: object
       properties:
@@ -1422,7 +2974,7 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
-        createAt:
+        createdAt:
           oneOf:
             - type: string
               format: date-time
@@ -1442,7 +2994,7 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
-        createAt:
+        createdAt:
           oneOf:
             - type: string
               format: date-time
@@ -1462,7 +3014,184 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/BoolFieldUpdateOperationsInput"
-        createAt:
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    RequestUpdateWithoutRequesterInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        targetUser:
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutReceivedRequestsNestedI\
+            nput"
+    RequestUncheckedUpdateWithoutRequesterInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        targetUserId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    RequestUncheckedUpdateManyWithoutRequesterInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        targetUserId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    RequestUpdateWithoutTargetUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        requester:
+          $ref: "#/components/schemas/UserUpdateOneRequiredWithoutSentRequestsNestedInput"
+    RequestUncheckedUpdateWithoutTargetUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        requesterId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+    RequestUncheckedUpdateManyWithoutTargetUserInput:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        requesterId:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/StringFieldUpdateOperationsInput"
+        status:
+          oneOf:
+            - $ref: "#/components/schemas/RequestStatus"
+            - $ref: "#/components/schemas/EnumRequestStatusFieldUpdateOperationsInput"
+        message:
+          oneOf:
+            - type: string
+            - $ref: "#/components/schemas/NullableStringFieldUpdateOperationsInput"
+            - type: "null"
+        createdAt:
+          oneOf:
+            - type: string
+              format: date-time
+            - $ref: "#/components/schemas/DateTimeFieldUpdateOperationsInput"
+        updatedAt:
           oneOf:
             - type: string
               format: date-time
@@ -1477,10 +3206,18 @@ components:
     UserInclude:
       type: object
       properties:
-        todo:
+        todos:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/TodosFindManyArgs"
+        sentRequests:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestFindManyArgs"
+        receivedRequests:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestFindManyArgs"
         _count:
           oneOf:
             - type: boolean
@@ -1492,10 +3229,25 @@ components:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/UserDefaultArgs"
+    RequestInclude:
+      type: object
+      properties:
+        requester:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
+        targetUser:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
     UserCountOutputTypeSelect:
       type: object
       properties:
-        todo:
+        todos:
+          type: boolean
+        sentRequests:
+          type: boolean
+        receivedRequests:
           type: boolean
     UserCountOutputTypeDefaultArgs:
       type: object
@@ -1509,10 +3261,18 @@ components:
           type: boolean
         name:
           type: boolean
-        todo:
+        todos:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/TodosFindManyArgs"
+        sentRequests:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestFindManyArgs"
+        receivedRequests:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestFindManyArgs"
         _count:
           oneOf:
             - type: boolean
@@ -1526,13 +3286,38 @@ components:
           type: boolean
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: boolean
         user:
           oneOf:
             - type: boolean
             - $ref: "#/components/schemas/UserDefaultArgs"
         userId:
+          type: boolean
+    RequestSelect:
+      type: object
+      properties:
+        id:
+          type: boolean
+        requester:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
+        requesterId:
+          type: boolean
+        targetUser:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/UserDefaultArgs"
+        targetUserId:
+          type: boolean
+        status:
+          type: boolean
+        message:
+          type: boolean
+        createdAt:
+          type: boolean
+        updatedAt:
           type: boolean
     UserCountAggregateInput:
       type: object
@@ -1566,7 +3351,7 @@ components:
           type: boolean
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: boolean
         userId:
           type: boolean
@@ -1581,7 +3366,7 @@ components:
           type: boolean
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: boolean
         userId:
           type: boolean
@@ -1594,9 +3379,62 @@ components:
           type: boolean
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: boolean
         userId:
+          type: boolean
+    RequestCountAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        requesterId:
+          type: boolean
+        targetUserId:
+          type: boolean
+        status:
+          type: boolean
+        message:
+          type: boolean
+        createdAt:
+          type: boolean
+        updatedAt:
+          type: boolean
+        _all:
+          type: boolean
+    RequestMinAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        requesterId:
+          type: boolean
+        targetUserId:
+          type: boolean
+        status:
+          type: boolean
+        message:
+          type: boolean
+        createdAt:
+          type: boolean
+        updatedAt:
+          type: boolean
+    RequestMaxAggregateInput:
+      type: object
+      properties:
+        id:
+          type: boolean
+        requesterId:
+          type: boolean
+        targetUserId:
+          type: boolean
+        status:
+          type: boolean
+        message:
+          type: boolean
+        createdAt:
+          type: boolean
+        updatedAt:
           type: boolean
     AggregateUser:
       type: object
@@ -1660,7 +3498,7 @@ components:
           type: string
         completed:
           type: boolean
-        createAt:
+        createdAt:
           type: string
           format: date-time
         userId:
@@ -1681,8 +3519,63 @@ components:
         - id
         - name
         - completed
-        - createAt
+        - createdAt
         - userId
+    AggregateRequest:
+      type: object
+      properties:
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestCountAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestMaxAggregateOutputType"
+    RequestGroupByOutputType:
+      type: object
+      properties:
+        id:
+          type: string
+        requesterId:
+          type: string
+        targetUserId:
+          type: string
+        status:
+          $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _count:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestCountAggregateOutputType"
+        _min:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestMinAggregateOutputType"
+        _max:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestMaxAggregateOutputType"
+      required:
+        - id
+        - requesterId
+        - targetUserId
+        - status
+        - createdAt
+        - updatedAt
     UserCountAggregateOutputType:
       type: object
       properties:
@@ -1727,7 +3620,7 @@ components:
           type: integer
         completed:
           type: integer
-        createAt:
+        createdAt:
           type: integer
         userId:
           type: integer
@@ -1737,7 +3630,7 @@ components:
         - id
         - name
         - completed
-        - createAt
+        - createdAt
         - userId
         - _all
     TodosMinAggregateOutputType:
@@ -1755,7 +3648,7 @@ components:
           oneOf:
             - type: "null"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - type: "null"
             - type: string
@@ -1779,7 +3672,7 @@ components:
           oneOf:
             - type: "null"
             - type: boolean
-        createAt:
+        createdAt:
           oneOf:
             - type: "null"
             - type: string
@@ -1788,6 +3681,100 @@ components:
           oneOf:
             - type: "null"
             - type: string
+    RequestCountAggregateOutputType:
+      type: object
+      properties:
+        id:
+          type: integer
+        requesterId:
+          type: integer
+        targetUserId:
+          type: integer
+        status:
+          type: integer
+        message:
+          type: integer
+        createdAt:
+          type: integer
+        updatedAt:
+          type: integer
+        _all:
+          type: integer
+      required:
+        - id
+        - requesterId
+        - targetUserId
+        - status
+        - message
+        - createdAt
+        - updatedAt
+        - _all
+    RequestMinAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: string
+        requesterId:
+          oneOf:
+            - type: "null"
+            - type: string
+        targetUserId:
+          oneOf:
+            - type: "null"
+            - type: string
+        status:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
+    RequestMaxAggregateOutputType:
+      type: object
+      properties:
+        id:
+          oneOf:
+            - type: "null"
+            - type: string
+        requesterId:
+          oneOf:
+            - type: "null"
+            - type: string
+        targetUserId:
+          oneOf:
+            - type: "null"
+            - type: string
+        status:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/RequestStatus"
+        message:
+          oneOf:
+            - type: "null"
+            - type: string
+        createdAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
+        updatedAt:
+          oneOf:
+            - type: "null"
+            - type: string
+              format: date-time
     _Meta:
       type: object
       description: Meta information about the request or response
@@ -2205,6 +4192,194 @@ components:
           $ref: "#/components/schemas/TodosMinAggregateInput"
         _max:
           $ref: "#/components/schemas/TodosMaxAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestCreateArgs:
+      type: object
+      required:
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        data:
+          $ref: "#/components/schemas/RequestCreateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestCreateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/RequestCreateManyInput"
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestCreateManyInput"
+        skipDuplicates:
+          type: boolean
+          description: Do not insert records with unique fields or ID fields that already
+            exist.
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestFindUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestFindFirstArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestFindManyArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestUpdateArgs:
+      type: object
+      required:
+        - where
+        - data
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        data:
+          $ref: "#/components/schemas/RequestUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestUpdateManyArgs:
+      type: object
+      required:
+        - data
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        data:
+          $ref: "#/components/schemas/RequestUpdateManyMutationInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestUpsertArgs:
+      type: object
+      required:
+        - create
+        - update
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        create:
+          $ref: "#/components/schemas/RequestCreateInput"
+        update:
+          $ref: "#/components/schemas/RequestUpdateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestDeleteUniqueArgs:
+      type: object
+      required:
+        - where
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        include:
+          $ref: "#/components/schemas/RequestInclude"
+        where:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestDeleteManyArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestCountArgs:
+      type: object
+      properties:
+        select:
+          $ref: "#/components/schemas/RequestSelect"
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestAggregateArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/RequestOrderByWithRelationInput"
+        cursor:
+          $ref: "#/components/schemas/RequestWhereUniqueInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/RequestMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/RequestMaxAggregateInput"
+        meta:
+          $ref: "#/components/schemas/_Meta"
+    RequestGroupByArgs:
+      type: object
+      properties:
+        where:
+          $ref: "#/components/schemas/RequestWhereInput"
+        orderBy:
+          $ref: "#/components/schemas/RequestOrderByWithRelationInput"
+        by:
+          $ref: "#/components/schemas/RequestScalarFieldEnum"
+        having:
+          $ref: "#/components/schemas/RequestScalarWhereWithAggregatesInput"
+        take:
+          type: integer
+        skip:
+          type: integer
+        _count:
+          oneOf:
+            - type: boolean
+            - $ref: "#/components/schemas/RequestCountAggregateInput"
+        _min:
+          $ref: "#/components/schemas/RequestMinAggregateInput"
+        _max:
+          $ref: "#/components/schemas/RequestMaxAggregateInput"
         meta:
           $ref: "#/components/schemas/_Meta"
 paths:
@@ -3544,6 +5719,677 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TodosGroupByArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/create:
+    post:
+      operationId: createRequest
+      description: Create a new Request
+      tags:
+        - request
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestCreateArgs"
+  /request/createMany:
+    post:
+      operationId: createManyRequest
+      description: Create several Request
+      tags:
+        - request
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestCreateManyArgs"
+  /request/findUnique:
+    get:
+      operationId: findUniqueRequest
+      description: Find one unique Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestFindUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/findFirst:
+    get:
+      operationId: findFirstRequest
+      description: Find the first Request matching the given condition
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestFindFirstArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/findMany:
+    get:
+      operationId: findManyRequest
+      description: Find a list of Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestFindManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/update:
+    patch:
+      operationId: updateRequest
+      description: Update a Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUpdateArgs"
+  /request/updateMany:
+    patch:
+      operationId: updateManyRequest
+      description: Update Requests matching the given condition
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUpdateManyArgs"
+  /request/upsert:
+    post:
+      operationId: upsertRequest
+      description: Upsert a Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUpsertArgs"
+  /request/delete:
+    delete:
+      operationId: deleteRequest
+      description: Delete one unique Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Request"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestDeleteUniqueArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/deleteMany:
+    delete:
+      operationId: deleteManyRequest
+      description: Delete Requests matching the given condition
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/BatchPayload"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestDeleteManyArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/count:
+    get:
+      operationId: countRequest
+      description: Find a list of Request
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    oneOf:
+                      - type: integer
+                      - $ref: "#/components/schemas/RequestCountAggregateOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestCountArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/aggregate:
+    get:
+      operationId: aggregateRequest
+      description: Aggregate Requests
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/AggregateRequest"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestAggregateArgs"
+        - name: meta
+          in: query
+          description: Superjson serialization metadata for parameter "q"
+          content:
+            application/json:
+              schema: {}
+  /request/groupBy:
+    get:
+      operationId: groupByRequest
+      description: Group Requests by fields
+      tags:
+        - request
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RequestGroupByOutputType"
+                    description: The Prisma response data serialized with superjson
+                  meta:
+                    $ref: "#/components/schemas/_Meta"
+                    description: The superjson serialization metadata for the "data" field
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is forbidden
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_Error"
+          description: Request is unprocessable due to validation errors
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Superjson-serialized Prisma query object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestGroupByArgs"
         - name: meta
           in: query
           description: Superjson serialization metadata for parameter "q"

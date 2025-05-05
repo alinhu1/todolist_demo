@@ -9,9 +9,33 @@ import {
 } from "@/generated/hooks";
 import Image from "next/image";
 
-const Fetch = () => {
+interface IProps {
+  currentUserId: string;
+}
+
+const Fetch = (props: IProps) => {
+  const { currentUserId } = props;
   const queryClient = useQueryClient();
-  const { data: todo = [] } = useFindManyTodos();
+  const { data: todo = [] } = useFindManyTodos({
+    where: {
+      OR: [
+        { userId: currentUserId },
+        {
+          user: {
+            receivedRequests: {
+              some: {
+                requesterId: currentUserId,
+                status: "approved",
+              },
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      user: true,
+    },
+  });
 
   const { mutate: deleteMutation } = useDeleteTodos({
     onSuccess: () => {
@@ -36,12 +60,16 @@ const Fetch = () => {
     }
   });
 
-  // const count = todo.filter((todo) => !todo.completed).length;
+  const myTodos = onshow.filter((todo) => todo.userId === currentUserId);
+  const shareTodos = onshow.filter((todo) => todo.userId !== currentUserId);
+
+  const count = myTodos.filter((todo) => !todo.completed).length;
 
   return (
     <div className="footer-top">
+      <h4>我的代办事项</h4>
       <div className="footer-main">
-        {onshow.map((todo1) => (
+        {myTodos.map((todo1) => (
           <li key={todo1.id}>
             {todo1.name}
             <div>
@@ -67,14 +95,24 @@ const Fetch = () => {
                   width={20}
                   height={20}
                   priority
-                  className=""
                 />
               </button>
             </div>
           </li>
         ))}
       </div>
-      {/* <span>还有 {count}个未完成</span> */}
+
+      <h4>共享的代办事项</h4>
+      <div className="footer-main">
+        {shareTodos.map((todo1) => (
+          <li key={todo1.id}>
+            {todo1.name}
+            <span>(来自用户 {todo1.user.id})</span>
+          </li>
+        ))}
+      </div>
+
+      <span>还有 {count} 个未完成</span>
       <div className="footer">
         <Image
           src="/images/filter.png"
@@ -84,8 +122,8 @@ const Fetch = () => {
           priority
           className="filter"
         />
-        <button onClick={() => setFilter("all")}>全部 </button>
-        <button onClick={() => setFilter("active")}>未完成 </button>
+        <button onClick={() => setFilter("all")}>全部</button>
+        <button onClick={() => setFilter("active")}>未完成</button>
         <button onClick={() => setFilter("completed")}>已完成</button>
       </div>
     </div>

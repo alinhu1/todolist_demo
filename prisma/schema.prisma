@@ -17,17 +17,37 @@ generator task {
   provider = "node --import=tsx ./generator/index.ts"
 }
 
+enum RequestStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
-  id   String  @id()
-  name String?
-  todo Todos[]
+  id               String    @id()
+  name             String?
+  todos            Todos[]
+  sentRequests     Request[] @relation("SentRequests")
+  receivedRequests Request[] @relation("ReceivedRequests")
 }
 
 model Todos {
   id        String   @id() @default(cuid())
   name      String
   completed Boolean  @default(false)
-  createAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model Request {
+  id           String        @id() @default(cuid())
+  requester    User          @relation("SentRequests", fields: [requesterId], references: [id])
+  requesterId  String
+  targetUser   User          @relation("ReceivedRequests", fields: [targetUserId], references: [id])
+  targetUserId String
+  status       RequestStatus
+  message      String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt()
 }
