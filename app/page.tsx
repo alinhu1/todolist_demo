@@ -9,6 +9,9 @@ import SearchUser from "./components/SearchUser";
 import Request from "./components/Request";
 
 import Image from "next/image";
+import TeamManagement from "./components/TeamManagement";
+import JoinTeamRequest from "./components/JoinTeamRequest";
+
 
 export interface Todo {
   id: number;
@@ -69,7 +72,10 @@ export default async function Home() {
         </ul>
         <SearchUser currentUserId={claims?.sub || ""} />
         <Request currentUserId={claims?.sub || ""} />
+      <TeamManagement userId={claims?.sub || ""}/>
+      <JoinTeamRequest userId={claims?.sub || ""} />
       </div>
     </div>
   );
 }
+  

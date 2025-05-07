@@ -30,15 +30,25 @@ datasource db {
 }
 
 model User {
-  id               String    @id
+  id               String        @id
   name             String?
+
   todos            Todos[]
-  sentRequests     Request[] @relation("SentRequests")
-  receivedRequests Request[] @relation("ReceivedRequests")
+
+  sentRequests     Request[]     @relation("SentRequests")
+  receivedRequests Request[]     @relation("ReceivedRequests")
+
+  teamMember       TeamMember[]
+  createTeamTodos  TeamTodos[]   @relation('TeamTodoCreator')
+  ownedTeams       Team[]        @relation('OwnedTeams')
+  teamRequests     TeamRequest[]
 
   @@deny('all', auth() == null)
+
   @@deny('create', true)
+
   @@allow('read', true)
+
   @@allow('update,delete', auth() == this)
 }
 
@@ -47,29 +57,39 @@ model Todos {
   name      String   @length(min: 1, max: 100)
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
+
   user      User     @relation(fields: [userId], references: [id])
   userId    String
 
   @@deny('all', auth() == null)
+
   @@allow('create', auth() != null)
+
   @@allow('read,delete,update', auth().id == userId)
+
   @@allow('read',auth().id == userId ||user.receivedRequests?[requesterId == auth().id && status == 'approved'])
 }
 
 model Request {
   id           String        @id @default(cuid())
-  requester    User          @relation("SentRequests", fields: [requesterId], references: [id])
-  requesterId  String
-  targetUser   User          @relation("ReceivedRequests", fields: [targetUserId], references: [id])
-  targetUserId String
-  status       RequestStatus
   message      String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
+  requester    User          @relation("SentRequests", fields: [requesterId], references: [id])
+  requesterId  String
+
+  targetUser   User          @relation("ReceivedRequests", fields: [targetUserId], references: [id])
+  targetUserId String
+
+  status       RequestStatus
+
   @@deny('all', auth() == null)
+
   @@allow('read', auth() == requester || auth() == targetUser)
+
   @@allow('create', auth() == requester)
+
   @@allow('update', auth() == targetUser && future().status != status)
 }
 
@@ -78,3 +98,84 @@ enum RequestStatus {
   approved
   rejected
 }
+
+model TeamTodos {
+  id        String   @id @default(cuid())
+  name      String   @length(min: 1, max: 100)
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  creator   User     @relation("TeamTodoCreator", fields: [creatorId], references: [id])
+  creatorId String
+
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+
+  @@allow('create', team.members?[userId == auth().id])
+
+  @@allow('read', team.members?[userId == auth().id])
+
+  @@allow('update,delete', creator.id == auth().id || team.createdBy.id == auth().id)
+}
+
+model Team {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  createdAt   DateTime      @default(now())
+
+  createdBy   User          @relation("OwnedTeams", fields: [createdById], references: [id])
+  createdById String
+
+  members     TeamMember[]
+  todos       TeamTodos[]
+  requests    TeamRequest[]
+
+  @@allow('create',auth() !=null)
+
+  @@allow('read', members?[userId == auth().id] || createdById == auth().id)
+
+  @@allow('update,delete', createdBy.id == auth().id)
+}
+
+model TeamMember {
+  id     String   @id @default(cuid())
+
+  team   Team     @relation(fields: [teamId], references: [id])
+  teamId String
+
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+
+  role   TeamRole @default(MEMBER)
+
+  @@allow('create', team.createdBy.id == auth().id )
+
+  @@allow('read,delete', team.createdBy.id == auth().id || user.id == auth().id)
+}
+
+enum TeamRole {
+  MEMBER
+  ADMIN
+}
+
+model TeamRequest {
+  id          String        @id @default(cuid())
+  message     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  team        Team          @relation(fields: [teamId], references: [id])
+  teamId      String
+
+  requester   User          @relation(fields: [requesterId], references: [id])
+  requesterId String
+
+  status      RequestStatus @default(pending)
+
+  @@allow('create', auth() == requester)
+
+  @@allow('read', auth() == team.createdBy || auth() == requester)
+
+  @@allow('update', auth() == team.createdBy && future().status != status)
+}
+

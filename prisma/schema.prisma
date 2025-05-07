@@ -23,12 +23,21 @@ enum RequestStatus {
   rejected
 }
 
+enum TeamRole {
+  MEMBER
+  ADMIN
+}
+
 model User {
-  id               String    @id()
+  id               String        @id()
   name             String?
   todos            Todos[]
-  sentRequests     Request[] @relation("SentRequests")
-  receivedRequests Request[] @relation("ReceivedRequests")
+  sentRequests     Request[]     @relation("SentRequests")
+  receivedRequests Request[]     @relation("ReceivedRequests")
+  teamMember       TeamMember[]
+  createTeamTodos  TeamTodos[]   @relation("TeamTodoCreator")
+  ownedTeams       Team[]        @relation("OwnedTeams")
+  teamRequests     TeamRequest[]
 }
 
 model Todos {
@@ -42,12 +51,55 @@ model Todos {
 
 model Request {
   id           String        @id() @default(cuid())
+  message      String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt()
   requester    User          @relation("SentRequests", fields: [requesterId], references: [id])
   requesterId  String
   targetUser   User          @relation("ReceivedRequests", fields: [targetUserId], references: [id])
   targetUserId String
   status       RequestStatus
-  message      String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt()
+}
+
+model TeamTodos {
+  id        String   @id() @default(cuid())
+  name      String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  creator   User     @relation("TeamTodoCreator", fields: [creatorId], references: [id])
+  creatorId String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+}
+
+model Team {
+  id          String        @id() @default(cuid())
+  name        String        @unique()
+  createdAt   DateTime      @default(now())
+  createdBy   User          @relation("OwnedTeams", fields: [createdById], references: [id])
+  createdById String
+  members     TeamMember[]
+  todos       TeamTodos[]
+  requests    TeamRequest[]
+}
+
+model TeamMember {
+  id     String   @id() @default(cuid())
+  team   Team     @relation(fields: [teamId], references: [id])
+  teamId String
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+  role   TeamRole @default(MEMBER)
+}
+
+model TeamRequest {
+  id          String        @id() @default(cuid())
+  message     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt()
+  team        Team          @relation(fields: [teamId], references: [id])
+  teamId      String
+  requester   User          @relation(fields: [requesterId], references: [id])
+  requesterId String
+  status      RequestStatus @default(pending)
 }
