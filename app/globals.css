@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 html,
 body {
@@ -144,4 +144,159 @@ body {
 .todo_item_active::after {
   content: "√";
   color: green;
+} */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.nav {
+  background-color: #f6f8f9;
+  display: flex;
+  height: 3rem;
+  padding: 0 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav_left,
+.nav_right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.head {
+  margin-left: 20px;
+}
+
+.sign-in {
+  color: #4a90e2;
+}
+
+.content {
+  text-align: center;
+  background-image: url(./image/bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  min-height: calc(100vh - 3rem);
+  padding: 20px;
+}
+
+.content_nav {
+  margin-bottom: 1rem;
+}
+
+.content_nav h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  color: #2c3e50;
+}
+
+.content_nav span {
+  color: #4b5563;
+  letter-spacing: 0.5px;
+}
+
+.banner_top {
+  width: 40%;
+  height: auto;
+  background-color: #ffffff;
+  text-align: left;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 5px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.banner_top p {
+  margin-bottom: 0;
+  margin-top: 5;
+  font-size: 0.8rem;
+}
+
+.banner_top img {
+  width: calc(100% - 40px) !important;
+  height: auto !important;
+  margin-top: 4px;
+  display: block;
+}
+
+.banner_top span {
+  font-size: 0.7rem;
+  color: #4b5563;
+}
+
+.banner {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  align-items: center;
+}
+
+.banner_row {
+  width: 43%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.banner_left,
+.banner_right {
+  background-color: #ffffff;
+  flex: 1;
+  min-width: 200px;
+  min-height: 0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.banner_content {
+  min-height: auto;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.banner_content p {
+  font-size: 0.8rem;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.banner_content span {
+  font-size: 0.7rem;
+  color: #4b5563;
+}
+
+.footer {
+  margin-top: 20px;
+}
+.status-box {
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  color: #4b5563;
+  background-color: #f9fafb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.complete {
+  background-color: #4a90e2;
 }
