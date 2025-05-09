@@ -1,17 +1,9 @@
-import Fetch from "./components/Fetch";
-import Create from "./components/Create";
 import { getLogtoContext, signIn, signOut } from "@logto/next/server-actions";
 import { logtoConfig } from "./logto";
 import SignOut from "./sign-out";
 import SignIn from "./sign-in";
 
-import SearchUser from "./components/SearchUser";
-import Request from "./components/Request";
-
 import Image from "next/image";
-import TeamManagement from "./components/TeamManagement";
-import JoinTeamRequest from "./components/JoinTeamRequest";
-
 
 export interface Todo {
   id: number;
@@ -52,7 +44,7 @@ export default async function Home() {
               <SignIn
                 onSignIn={async () => {
                   "use server";
-                   await signIn(logtoConfig,{redirectUri:"http://localhost:3000/auth/personal"});
+                  await signIn(logtoConfig);
                 }}
               />
             </p>
@@ -181,20 +173,20 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="footer">
+        <div className="footer_page">
           <span className="status-box complete">全部</span>
           <span className="status-box">未完成</span>
           <span className="status-box">已完成</span>
         </div>
 
-        {claims?.sub == null ? null : <Create userId={claims?.sub} />}
+        {/* {claims?.sub == null ? null : <Create userId={claims?.sub} />}
         <ul>
           <Fetch currentUserId={claims?.sub || ""} />
         </ul>
         <SearchUser currentUserId={claims?.sub || ""} />
         <Request currentUserId={claims?.sub || ""} />
         <TeamManagement userId={claims?.sub || ""} />
-        <JoinTeamRequest userId={claims?.sub || ""} />
+        <JoinTeamRequest userId={claims?.sub || ""} /> */}
       </div>
     </div>
   );

@@ -15,8 +15,8 @@ const SignOut = ({ onSignOut }: Props) => {
       <Image
         src="/images/exit.png"
         alt="退出登录"
-        width={25}
-        height={25}
+        width={20}
+        height={20}
         priority
         className="exit"
       />

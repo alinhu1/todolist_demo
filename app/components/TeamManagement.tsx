@@ -44,14 +44,14 @@ const TeamManagement = (props: Iprops) => {
 
   return (
     <div>
-      <hr />
-      <h3>团队管理</h3>
       <input
         type="text"
-        placeholder="请创建团队名称"
+        placeholder="+   新建团队"
+        className="createteam"
         onChange={(e) => setTeamName(e.target.value)}
         value={TeamName}
-        onKeyDown={handleTeamNameKeyDown}
+        onKeyDown={handleTeamNameKeyDown
+        }
       />
 
       <TeamList userId={userId}></TeamList>
