@@ -75,6 +75,7 @@ export default async function Home() {
       <TeamManagement userId={claims?.sub || ""}/>
       <JoinTeamRequest userId={claims?.sub || ""} />
       </div>
+      
     </div>
   );
 }
