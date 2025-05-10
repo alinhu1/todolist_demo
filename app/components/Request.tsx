@@ -37,22 +37,32 @@ const Request = (props: IProps) => {
   };
 
   return (
-    <div>
+    <div className="user_request">
       <hr />
-      <h3>待处理的请求访问</h3>
+      <h3>待处理通知</h3>
       {requests.length == 0 ? (
         <p>暂无新请求</p>
       ) : (
         requests.map((request) => (
-          <div key={request.id}>
-            <p>来自用户{request.requester.id}请求访问</p>
-            {request.message && <p>留言:{request.message}</p>}
-            <button onClick={() => handleResponse(request.id, "approved")}>
-              同意
-            </button>
-            <button onClick={() => handleResponse(request.id, "rejected")}>
-              拒绝
-            </button>
+          <div key={request.id} className="from_user_request">
+            <div>
+              <p>用户{request.requester.id}请求访问您的代办列表</p>
+              {request.message && <p>留言:{request.message}</p>}
+            </div>
+            <div>
+              <button
+                onClick={() => handleResponse(request.id, "approved")}
+                className="btn_approved"
+              >
+                同意
+              </button>
+              <button
+                onClick={() => handleResponse(request.id, "rejected")}
+                className="btn_rejected"
+              >
+                拒绝
+              </button>
+            </div>
           </div>
         ))
       )}

@@ -47,10 +47,12 @@ const InviteForm = (props: Iprops) => {
   };
 
   return (
-    <div>
+    <div className="invite_form">
+      <h5>邀请成员</h5>
       <input
         type="text"
-        placeholder="输入用户ID"
+        placeholder="  输入用户ID"
+        className="invite_input"
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
       />

@@ -5,6 +5,7 @@ import TeamList from "./TeamList";
 
 interface Iprops {
   userId: string;
+  selectedTeamId?: string;
 }
 
 const TeamManagement = (props: Iprops) => {
@@ -50,11 +51,10 @@ const TeamManagement = (props: Iprops) => {
         className="createteam"
         onChange={(e) => setTeamName(e.target.value)}
         value={TeamName}
-        onKeyDown={handleTeamNameKeyDown
-        }
+        onKeyDown={handleTeamNameKeyDown}
       />
 
-      <TeamList userId={userId}></TeamList>
+      <TeamList userId={userId} selectedTeamId={props.selectedTeamId} />
     </div>
   );
 };

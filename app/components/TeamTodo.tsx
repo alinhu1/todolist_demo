@@ -8,6 +8,7 @@ import {
 } from "@/generated/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface Iprops {
   userId: string;
@@ -73,20 +74,37 @@ const TeamTodo = (props: Iprops) => {
   const count = teamTodos.filter((teamTodo) => !teamTodo.completed).length;
 
   return (
-    <div>
-      <h3>团队代办事项</h3>
+    <div className="teammanagement">
+      <h3>团队管理</h3>
       <input
         type="text"
-        placeholder="添加团队任务"
+        placeholder="＋ 添加团队任务"
+        className="addteam_todo"
         onChange={(e) => setInputTeamValue(e.target.value)}
         value={inputTeamValue}
         onKeyDown={handleTeamKeyDown}
       />
-      <ul>
-        {teamTodos.map((teamTodo) => (
-          <li key={teamTodo.id}>
-            <span>{teamTodo.name}</span>
-            <span>(创建者:{teamTodo.creatorId})</span>
+      <h4>团队代办事项</h4>
+      <span className="introduction">管理您的所有团队任务</span>
+
+      {teamTodos.map((teamTodo) => (
+        <div key={teamTodo.id} className="teamtodo_id">
+          <div>
+            <Image
+              src="/images/status-icon.png"
+              alt="团队代办标记"
+              width={20}
+              height={20}
+              priority
+              className="status-icon"
+            />
+            <span className="teamtodo_name_margin">{teamTodo.name}</span>
+            <span className="teamtodo_creator">
+              (创建者:{teamTodo.creatorId})
+            </span>
+          </div>
+
+          <div className="todo_icon_delete">
             <span
               className={`todo_item ${teamTodo.completed ? "todo_item_active" : ""}`}
               onClick={() =>
@@ -103,12 +121,19 @@ const TeamTodo = (props: Iprops) => {
                 });
               }}
             >
-              删除
+              <Image
+                src="/images/delete1.png"
+                alt="删除"
+                width={20}
+                height={20}
+                priority
+                className="team_deleted"
+              />
             </button>
-          </li>
-        ))}
-      </ul>
-      <span>还有 {count} 个未完成</span>
+          </div>
+        </div>
+      ))}
+      <div className="teamcount">还有 {count} 个未完成</div>
     </div>
   );
 };

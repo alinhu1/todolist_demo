@@ -175,7 +175,7 @@ body {
   padding: 0;
   margin-right: 10px;
 }
-.logo{
+.logo {
   margin-bottom: 10px;
 }
 .todos_logo {
@@ -213,86 +213,57 @@ body {
   margin-left: 10px;
 }
 
-.person {
-  display: flex;
-  margin: 10px 25px 0 15px;
-  background-color: #2563eb;
-  min-height: 40px;
-  min-width: 330px;
-  border-radius: 8px;
-}
-
-.picture {
-  margin: 10px;
-}
-
-.person span {
-  margin-top: 7px;
-  color: #ffffff;
-  font-size: 0.9rem;
-}
-.person2 {
-  display: flex;
-  margin: 10px 25px 0 15px;
-  min-height: 40px;
-  min-width: 330px;
-  border-radius: 8px;
-}
-
-.createteam{
-  background-color: #2B6DE5;
-  /* font-size: 1rem; */
+.createteam {
+  background-color: #2b6de5;
   margin: 10px 25px 0 15px;
   min-height: 30px;
   min-width: 330px;
   border-radius: 8px;
 }
 
-.createteam::placeholder{
-color: #FFFFFF;
-text-align: center;
+.createteam::placeholder {
+  color: #ffffff;
+  text-align: center;
 }
 
-.teamname{
+.teamname {
   margin: 20px 25px 20px 15px;
   justify-content: space-between;
+  display: flex;
 }
 
-.space{
-  margin-left: 300px;
+.team_name {
+  margin-left: 20px;
 }
 
-.mytodos_right{
+.mytodos_right {
   margin-top: 20px;
   margin-left: 70px;
 }
 
-.add_todo{
+.add_todo {
   margin-bottom: 20px;
 }
 
-.todo_input{
+.todo_input {
   min-height: 30px;
   min-width: 700px;
   border-radius: 8px;
   margin-right: 20px;
 }
 
-.add_btn{
+.add_btn {
   min-height: 30px;
-  background-color: #2B6DE5;
+  background-color: #2b6de5;
   border-radius: 8px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-
-
-.footer-main{
- 
+.footer-main {
   min-height: 370px;
 }
 
-.mytodo_border{
+.mytodo_border {
   border: solid 1px #e2e8f0;
   margin-bottom: 10px;
   width: 800px;
@@ -301,58 +272,325 @@ text-align: center;
   border-radius: 8px;
 }
 
-
 .todo_item {
   border-radius: 50%;
   width: 20px;
   height: 20px;
   display: inline-block;
   border: solid 1px #e2e8f0;
-  margin:20px 10px;
+  margin: 20px 10px;
 }
 
 .todo_item_active::after {
   content: " √ ";
   color: #e2e8f0;
-  background-color: #2563EB;
+  background-color: #2563eb;
   border-radius: 60%;
 }
 
-.mytodo_name{
-  min-width:700px ;
+.mytodo_name {
+  min-width: 700px;
   margin: 15px 0;
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
 }
 
-.mytodo_name button{
+.mytodo_name button {
   border: none !important;
   background: none;
 }
 
-.mytodo_filter{
+.mytodo_filter {
   background-color: #f8fafc;
-  width:800px ;
-  min-height:30px;
+  width: 800px;
+  min-height: 30px;
   text-align: right;
   font-size: 0.8rem;
-  color: #64748B;
+  color: #64748b;
   margin: 20px 0;
 }
 
-.footer{
+.footer {
   margin-top: 25px;
   margin-left: 300px;
-
 }
 
-.footer button{
+.footer button {
   border-radius: 10px;
   margin-right: 10px;
-  color: #64748B;
+  color: #64748b;
   min-width: 50px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  min-width: 330px;
+  margin: 10px 25px 0 15px;
+
+  &:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  &.active {
+    background-color: #007bff;
+    color: white;
+  }
+}
+
+.share_user {
+  background-color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 950px;
+  border: solid 1px #e5e7eb;
+}
+
+.share_user span {
+  margin: 10px;
+}
+
+.share_user button {
+  margin-right: 80px;
+  color: red;
+  border: none !important;
+  background: none;
+}
+
+.user_all {
+  margin-top: 10px;
+  display: flex;
+  min-width: 800px;
+}
+
+.headdemo {
+  margin-top: 7px;
+  margin-right: 10px;
+}
+
+.user_id {
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+.user_request {
+  margin-top: 40px;
+  background: #ffffff;
+}
+
+.user_request h3 {
+  color: #5c6471;
+  line-height: 1.2;
+}
+
+.from_user_request {
+  background-color: #f8fafc;
+  width: 980px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.from_user_request p {
+  margin-left: 10px;
+}
+.from_user_request button {
+  margin-right: 10px;
+}
+
+.btn_approved {
+  background-color: #2563eb;
+  border: none !important;
+  color: #ffffff;
+}
+
+.btn_rejected {
+  border: solid 1px #e2e8f0;
+  color: #64748b;
+}
+
+.shareuser_todo {
+  width: 900px;
+}
+
+.share_todo {
+  background-color: #ffffff;
+  min-height: 50px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: solid 1px #e2e8f0;
+}
+
+.share_todo_name {
+  margin-left: 20px;
+}
+
+.share_todo_id {
+  margin-right: 40px;
+}
+
+.teammanagement h4 {
+  margin-bottom: 0.2em;
+}
+
+.addteam_todo {
+  min-width: 800px;
+  min-height: 40px;
+  border-radius: 8px;
+  border: solid 1px #e5e7eb;
+}
+
+.addteam_todo::placeholder {
+  text-align: center;
+}
+
+.introduction {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.teamtodo_id {
+  margin: 20px 0;
+  width: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: solid 1px #e5e7eb;
+}
+
+.todo_icon_delete {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.status-icon {
+  margin: 0 10px;
+}
+
+.teamtodo_name_margin {
+  margin-right: 10px;
+}
+
+.teamtodo_creator {
+  color: #2b6de5;
+}
+
+.todo_icon_delete button {
+  border: none !important;
+  background: none;
+}
+.teamcount {
+  color: #6b7280;
+  background-color: #e2e8f0;
+  width: 800px;
+  text-align: right;
+  min-height: 30px;
+}
+
+.invite_form h5 {
+  font-weight: inherit;
+  margin-bottom: 0.8em;
+}
+
+.invite_input {
+  min-width: 700px;
+  margin-right: 10px;
+  min-height: 30px;
+  border-radius: 8px;
+  border: solid 1px #e5e7eb;
+}
+.invite_form button {
+  background-color: #4f6aff;
+  min-height: 30px;
+  color: #ffffff;
+  border-radius: 8px;
+  border: none !important;
+  min-width: 80px;
+}
+
+.joinrequest h5 {
+  margin-bottom: 0.2em;
+}
+
+.user_joinrequest {
+  margin-top: 10px;
+  width: 800px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 40px;
+  align-items: center;
+  border-radius: 6px;
+  border: solid 1px #e5e7eb;
+}
+
+.user_request_join {
+  margin-left: 10px;
+}
+
+.user_joinrequest button {
+  margin-right: 10px;
+  border-radius: 8px;
+  min-width: 50px;
+}
+
+.joinrequest_approved_btn {
+  background-color: #2563eb;
+  border: none !important;
+  color: #ffffff;
+}
+
+.joinrequest_rejected_btn {
+  border: solid 1px #e2e8f0;
+  color: #64748b;
+}
+
+.join-team h5 {
+  font-weight: inherit;
+  margin-bottom: 0.8em;
+}
+
+.jointeam-icon {
+  margin-right: 10px;
+}
+
+.jointeam {
+  display: flex;
+  align-items: center;
+}
+.team-item {
+  width: 800px;
+
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.team-item button {
+  background-color: #4f6aff;
+  min-height: 30px;
+  color: #ffffff;
+  border-radius: 8px;
+  border: none !important;
+  min-width: 80px;
+}

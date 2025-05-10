@@ -7,6 +7,12 @@ import { logtoConfig } from "@/app/logto";
 import SignOut from "@/app/sign-out";
 import { getLogtoContext, signOut } from "@logto/next/server-actions";
 import Image from "next/image";
+import Link from "next/link";
+import Request from "@/app/components/Request";
+import ShareTodo from "@/app/components/ShareTodo";
+import TeamTodo from "@/app/components/TeamTodo";
+import TeamRequests from "@/app/components/TeamRequests ";
+import InviteForm from "@/app/components/InviteForm";
 
 export interface Todo {
   id: number;
@@ -14,13 +20,44 @@ export interface Todo {
   completed: boolean;
 }
 
-export default async function PersonalPage() {
+export default async function PersonalPage({
+  searchParams,
+}: {
+  searchParams?: {
+    view?: "my-todos" | "shared-settings" | "shared-todos";
+    team?: string;
+  };
+}) {
   const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+  const currentView = searchParams?.view || "my-todos";
+  const selectedTeamId = searchParams?.team;
+
   console.log(isAuthenticated, claims);
 
   if (!isAuthenticated) {
     return <div>请先登录</div>;
   }
+
+  const menuItems = [
+    {
+      id: "my-todos",
+      label: "我的代办",
+      icon: "/images/personal_todo.png",
+      href: "/auth/personal",
+    },
+    {
+      id: "shared-settings",
+      label: "共享设置",
+      icon: "/images/share.png",
+      href: "/auth/personal?view=shared-settings",
+    },
+    {
+      id: "shared-todos",
+      label: "共享代办",
+      icon: "/images/sharetodo.png",
+      href: "/auth/personal?view=shared-todos",
+    },
+  ];
 
   return (
     <div className="personal-page">
@@ -50,68 +87,69 @@ export default async function PersonalPage() {
         <div className="mytodos_left">
           <div className="left_top">
             <span className="title">个人代办</span>
-            <div className="person">
-              <Image
-                src="/images/mytodo.png"
-                alt="我的代办"
-                width={15}
-                height={15}
-                priority
-                className="picture"
-              />{" "}
-              <span>我的代办</span>
-            </div>
-            <div className="person2">
-              <Image
-                src="/images/share.png"
-                alt="共享设置"
-                width={15}
-                height={15}
-                priority
-                className="picture"
-              />{" "}
-              <span>共享设置</span>
-            </div>
-            <div className="person2">
-              <Image
-                src="/images/sharetodo.png"
-                alt="共享代办"
-                width={15}
-                height={15}
-                priority
-                className="picture"
-              />{" "}
-              <span>共享代办</span>
+            <br />
+            <div className="menu-list">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className={`menu-item ${currentView === item.id ? "active" : ""}`}
+                >
+                  <Image
+                    src={item.icon}
+                    alt={item.label}
+                    width={15}
+                    height={15}
+                    className="menu-icon"
+                  />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
             </div>
           </div>
 
-          <div >
+          <div>
             <span className="title">团队空间</span>
             <div>
-            <TeamManagement userId={claims?.sub || ""} />
+              <TeamManagement userId={claims?.sub || ""} />
             </div>
-
           </div>
         </div>
 
-
         <div className="mytodos_right">
-          <h3>我的代办</h3>
-          {claims?.sub == null ? null : <Create userId={claims?.sub} />}
-         
-        <Fetch currentUserId={claims?.sub || ""} />
-    
+          {selectedTeamId ? (
+            <div className="team-content">
+              <TeamTodo userId={claims?.sub || ""} teamId={selectedTeamId} />
+              <InviteForm teamId={selectedTeamId} />
+              <JoinTeamRequest userId={claims?.sub || ""} />
+              <TeamRequests teamId={selectedTeamId} />
+            </div>
+          ) : (
+            currentView === "my-todos" && (
+              <>
+                <h3>我的代办</h3>
+                {claims?.sub == null ? null : <Create userId={claims?.sub} />}
+                <Fetch currentUserId={claims?.sub || ""} />
+              </>
+            )
+          )}
+
+          {currentView === "shared-settings" && (
+            <>
+              <h3>共享设置</h3>
+              <SearchUser currentUserId={claims?.sub || ""} />
+              <Request currentUserId={claims?.sub || ""} />
+            </>
+          )}
+
+          {currentView === "shared-todos" && (
+            <>
+              <h3>共享代办</h3>
+              <ShareTodo currentUserId={claims?.sub || ""} />
+            </>
+          )}
         </div>
       </div>
-
-      {/* {claims?.sub == null ? null : <Create userId={claims?.sub} />} */}
-      {/* <ul>
-        <Fetch currentUserId={claims?.sub || ""} />
-      </ul> */}
-      <SearchUser currentUserId={claims?.sub || ""} />
-      {/* <Request currentUserId={claims?.sub || ""} /> */}
-      {/* <TeamManagement userId={claims?.sub || ""} /> */}
-      <JoinTeamRequest userId={claims?.sub || ""} />
     </div>
   );
 }
