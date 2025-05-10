@@ -3,6 +3,7 @@
 import { useCreateRequest, useFindManyUser } from "@/generated/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import Image from "next/image";
 
 interface IProps {
   currentUserId: string;
@@ -13,7 +14,6 @@ const SearchUser = (props: IProps) => {
   const { data: users = [] } = useFindManyUser();
   const [message, setMessage] = useState("");
 
-  //创建请求
   const { mutate: createRequest } = useCreateRequest({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["requests"] });
@@ -24,20 +24,25 @@ const SearchUser = (props: IProps) => {
 
   return (
     <div className="search-section">
-      <hr />
-      <h3>发送访问请求</h3>
       <div className="search-box">
-        <input
-          type="text"
-          placeholder="可选留言"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
         {users
           .filter((user) => user.id !== currentUserId)
           .map((user) => (
-            <li key={user.id}>
-              用户 ID:{user.id}
+            <div className="share_user" key={user.id}>
+              <div className="user_all">
+                <Image
+                  src="/images/userdemo.png"
+                  alt="头像模型"
+                  width={35}
+                  height={35}
+                  priority
+                  className="headdemo"
+                />
+                <div className="user_message_id">
+                  <div className="user_message">用户 ID</div>
+                  <div className="user_id">{user.id}</div>
+                </div>
+              </div>
               <button
                 onClick={() => {
                   createRequest({
@@ -50,9 +55,9 @@ const SearchUser = (props: IProps) => {
                   });
                 }}
               >
-                请求访问该用户
+                请求访问
               </button>
-            </li>
+            </div>
           ))}
       </div>
     </div>

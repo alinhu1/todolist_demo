@@ -35,15 +35,16 @@ const Create = (props: IProps) => {
   };
 
   return (
-    <div>
+    <div className="add_todo">
       <input
         type="text"
-        placeholder=" ＋  请输入你需要完成的事情"
+        placeholder=" ＋  添加新任务..."
         className="todo_input"
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
         onKeyDown={handleKeyDown}
       ></input>
+      <button className="add_btn">添加任务</button>
     </div>
   );
 };
