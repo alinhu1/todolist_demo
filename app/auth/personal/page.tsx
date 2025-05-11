@@ -20,14 +20,15 @@ export interface Todo {
   completed: boolean;
 }
 
-export default async function PersonalPage({
-  searchParams,
-}: {
-  searchParams?: {
+interface IProps {
+  searchParams?: Promise<{
     view?: "my-todos" | "shared-settings" | "shared-todos";
     team?: string;
-  };
-}) {
+  }>;
+}
+
+export default async function PersonalPage(props: IProps) {
+  const searchParams = await props.searchParams;
   const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
   const currentView = searchParams?.view || "my-todos";
   const selectedTeamId = searchParams?.team;
