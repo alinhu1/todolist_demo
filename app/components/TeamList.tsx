@@ -1,12 +1,13 @@
 "use client";
 
 import { useFindManyTeam } from "@/generated/hooks";
-import InviteForm from "./InviteForm";
-import TeamRequests from "./TeamRequests ";
-import TeamTodo from "./TeamTodo";
+
+import Image from "next/image";
+import Link from "next/link";
 
 interface Iprops {
   userId: string;
+  selectedTeamId?: string;
 }
 
 const TeamList = (props: Iprops) => {
@@ -31,13 +32,22 @@ const TeamList = (props: Iprops) => {
   return (
     <div>
       {teams.map((team) => (
-        <li key={team.id}>
-          {team.name}
-
-          <TeamTodo userId={userId} teamId={team.id} />
-          <InviteForm teamId={team.id} />
-          <TeamRequests teamId={team.id} />
-        </li>
+        <Link
+          key={team.id}
+          href={`/auth/personal?team=${team.id}`}
+          className={`teamname ${props.selectedTeamId === team.id ? "active" : ""}`}
+        >
+          <div className="team_name">{team.name}</div>
+          <span className="space">{}</span>
+          <Image
+            src="/images/ellipsis.png"
+            alt="省略号"
+            width={20}
+            height={20}
+            priority
+            className="ellipsis"
+          />
+        </Link>
       ))}
     </div>
   );

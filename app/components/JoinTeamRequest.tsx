@@ -2,13 +2,14 @@
 
 import { useCreateTeamRequest, useFindManyTeam } from "@/generated/hooks";
 import { useState } from "react";
+import Image from "next/image";
 
 interface IProps {
   userId: string;
 }
 
 const JoinTeamRequest = ({ userId }: IProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const [message, setMessage] = useState("");
 
   const { data: teams = [] } = useFindManyTeam();
@@ -32,14 +33,7 @@ const JoinTeamRequest = ({ userId }: IProps) => {
 
   return (
     <div className="join-team">
-      <hr />
-      <h3>申请加入团队</h3>
-      <input
-        type="text"
-        placeholder="搜索团队名称"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <h5>申请加入团队</h5>
       <div className="team-results">
         {teams
           .filter(
@@ -49,13 +43,17 @@ const JoinTeamRequest = ({ userId }: IProps) => {
           )
           .map((team) => (
             <div key={team.id} className="team-item">
-              <span>{team.name}</span>
-              <input
-                type="text"
-                placeholder="留言（可选）"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
+              <div className="jointeam">
+                <Image
+                  src="/images/team-icon.png"
+                  alt="团队icon"
+                  width={30}
+                  height={30}
+                  priority
+                  className="jointeam-icon"
+                />
+                <div>{team.name}</div>
+              </div>
               <button
                 onClick={() => {
                   handleJoinTeam(team.id);
